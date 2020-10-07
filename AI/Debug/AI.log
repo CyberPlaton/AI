@@ -1,0 +1,3 @@
+﻿  AI.cpp
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(25,34): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\Debug\AI.exe
