@@ -1,5 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(476,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   AI.cpp
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(29,34): warning C4326: return type of 'main' should be 'int' instead of 'void'
   AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\\AI\bin\Debug-Win32\AI\AI.exe
