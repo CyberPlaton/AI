@@ -5,9 +5,9 @@
 class Ship : public GameObject{
 public:
 
-	Ship(float x, float y, float r, float g, float b) {
+	Ship(float x, float y, float r, float g, float b, GraphicsComponent::GeometryType type) {
 
-		this->graphicsCmp = new GraphicsComponent(x, y, r, g, b);
+		this->graphicsCmp = new GraphicsComponent(x, y, r, g, b, type);
 		this->physicsCmp = new PhysicsComponent(x, y);
 	}
 

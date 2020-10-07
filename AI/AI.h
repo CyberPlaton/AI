@@ -6,28 +6,23 @@
 #include"ColorConsole.h" // Include after Platform to avoid MINMAX collision from win32.
 
 
+std::vector<GameObject*> g_Objects;
+
+
 class AI : public olc::PixelGameEngine {
 public:
 	AI() {
-		sAppName = "Example";
+		sAppName = "AI";
 	}
 
-public:
-	bool OnUserCreate() override{
-		// Called once at the start, so create things here
+	bool OnUserCreate() override;
+	bool OnUserUpdate(float fElapsedTime) override;
 
-		using namespace std;
 
-		cout << APP_COLOR << "Program initialized. Starting..." << white << endl;
-		return true;
-	}
+private:
+	void _initScene();
+	void _draw();
+	void _update(float dt);
+	void _handleKeyboard();
 
-	bool OnUserUpdate(float fElapsedTime) override{
-		// called once per frame
-#pragma omp parallel for
-		for (int x = 0; x < ScreenWidth(); x++)
-			for (int y = 0; y < ScreenHeight(); y++)
-				Draw(x, y, olc::Pixel(rand() % 255, rand() % 255, rand() % 255));
-		return true;
-	}
 };

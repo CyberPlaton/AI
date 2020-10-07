@@ -22,9 +22,6 @@ std::cout << "This is written in darkmagenta." << "\n";
 #define APP_SUCCESS_COLOR  color(FOREGROUND_GREEN | FOREGROUND_INTENSITY)
 #define APP_ERROR_COLOR  color(FOREGROUND_RED | FOREGROUND_INTENSITY)
 
-#define DEFAULT_USER_COLOR color(FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY)
-#define DEFAULT_INET_USER_COLOR color(FOREGROUND_GREEN | FOREGROUND_BLUE)
-
 
 namespace colors {
     enum {

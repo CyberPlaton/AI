@@ -3,20 +3,31 @@
 class GameObject;
 
 struct GraphicsComponent {
-	GraphicsComponent(float x, float y, float r, float g, float b) {
+
+	enum GeometryType {
+		RECTANGLE = 0,
+		TRIANGLE = 1,
+		CIRCLE = 2,
+		LINE = 3
+	};
+
+
+	GraphicsComponent(float x, float y, float r, float g, float b, GeometryType type) {
 
 		m_XPos = x;
 		m_YPos = y;
 		m_R = r; m_G = g; m_B = b;
+		m_Geometry = type;
 	}
 
 	~GraphicsComponent() = default;
 
 	void Draw() {
 
-
 	}
 
+	// Geometry
+	GeometryType m_Geometry;
 
 	// Position
 	float m_XPos;
@@ -26,7 +37,6 @@ struct GraphicsComponent {
 	float m_R;
 	float m_G;
 	float m_B;
-
 };
 
 
@@ -36,7 +46,7 @@ struct PhysicsComponent {
 		m_XPos = x;
 		m_YPos = y;
 
-		m_Size = 1;
+		m_Size = 10;
 		m_Acceleration = 0;
 		m_Velocity = 0;
 	}
