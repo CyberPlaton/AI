@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
+    <ClInclude Include="ColorConsole.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Ship.h" />

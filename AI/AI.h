@@ -3,7 +3,7 @@
 #include"GameObject.h"
 #include"Platform.h"
 #include"Ship.h"
-
+#include"ColorConsole.h" // Include after Platform to avoid MINMAX collision from win32.
 
 
 class AI : public olc::PixelGameEngine {
@@ -15,6 +15,10 @@ public:
 public:
 	bool OnUserCreate() override{
 		// Called once at the start, so create things here
+
+		using namespace std;
+
+		cout << APP_COLOR << "Program initialized. Starting..." << white << endl;
 		return true;
 	}
 

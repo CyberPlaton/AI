@@ -30,5 +30,8 @@
     <ClInclude Include="AI.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ColorConsole.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
