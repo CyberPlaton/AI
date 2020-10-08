@@ -6,6 +6,7 @@
 #include"ColorConsole.h" // Include after Platform to avoid MINMAX collision from win32.
 
 
+
 std::vector<GameObject*> g_Objects;
 
 
