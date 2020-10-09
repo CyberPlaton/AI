@@ -16,6 +16,9 @@
     <ClCompile Include="Ship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FiniteStateMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -31,6 +34,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ColorConsole.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FiniteStateMachine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OLCGameEngineInterface.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

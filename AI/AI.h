@@ -2,6 +2,7 @@
 
 #include"GameObject.h"
 #include"Platform.h"
+#include"OLCGameEngineInterface.h"
 #include"Ship.h"
 #include"ColorConsole.h" // Include after Platform to avoid MINMAX collision from win32.
 
