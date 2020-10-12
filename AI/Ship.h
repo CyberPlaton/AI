@@ -21,15 +21,25 @@ public:
 
 	void ApplyGravitation(float xdir, float ydir) override {
 
-
 	}
 
-	void Update(float dt = 0.16) {
+	void AddAIComponent() {
+		aiCmp = new AIComponent(this);
+	}
+
+
+	void Update(float dt) {
 
 		int width = 945;
 		int height = 705;
+		m_FPS = dt;
+
 
 		ApplyGravitation(0.0, 0.0); // Apply gravitation in direction of screen down.
+		if (aiCmp != nullptr) {
+			aiCmp->Update();
+		}
+
 
 		if (physicsCmp->m_XPos + physicsCmp->m_Size >= width) {
 			physicsCmp->m_XPos= width-(physicsCmp->m_Size);
@@ -47,8 +57,6 @@ public:
 
 		graphicsCmp->m_XPos = physicsCmp->m_XPos;
 		graphicsCmp->m_YPos = physicsCmp->m_YPos;
-
-		m_FPS = dt;
 	}
 
 
@@ -101,11 +109,12 @@ public:
 
 	void ResolveCollision(GameObject* obj) override{
 
+
 		physicsCmp->m_Velocity = -physicsCmp->m_Velocity;
 
-
 		physicsCmp->m_IsColliding = false;
-		obj->physicsCmp->m_IsColliding = false;
+
+
 
 		std::cout << APP_COLOR << "Collision at X::( "<< physicsCmp->m_XPos << " : " << obj->physicsCmp->m_XPos <<" )--Y::( " <<physicsCmp->m_YPos << " : " << obj->physicsCmp->m_YPos <<" )" << white << std::endl;
 		std::cout << APP_COLOR << "Of Ships 1::" << this << " and 2::" << obj << white << std::endl;

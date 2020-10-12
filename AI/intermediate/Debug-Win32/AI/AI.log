@@ -1,123 +1,121 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(476,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   AI.cpp
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(52,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(130,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(132,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(35,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(41,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(62,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(63,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(69,70): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(69,48): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(69,26): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(68,51): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(68,27): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(74,60): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(53,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(208,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(210,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(45,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(51,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(70,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(71,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(13,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(14,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(134,70): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(134,48): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(134,26): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(133,51): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(133,27): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(139,60): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(74,36): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(139,36): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(75,75): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(140,75): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(75,35): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(140,35): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(76,58): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(141,58): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(76,25): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(141,25): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(81,58): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(146,58): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(81,34): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(146,34): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(81,158): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(81,136): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(81,114): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(95,95): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(146,158): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(146,136): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(146,114): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(160,95): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(95,42): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(160,42): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(101,87): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(168,71): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(101,50): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(168,42): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(133,52): warning C4244: '=': conversion from 'int32_t' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(134,52): warning C4244: '=': conversion from 'int32_t' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(175,22): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(179,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(217,107): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(169,69): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(169,47): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(169,25): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(201,52): warning C4244: '=': conversion from 'int32_t' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(202,52): warning C4244: '=': conversion from 'int32_t' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(229,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(231,11): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(262,22): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(266,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(306,109): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(217,55): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(306,55): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(220,121): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(309,121): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(220,61): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(309,61): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(225,36): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(314,34): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(225,17): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(314,13): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(229,95): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-          with
-          [
-              T=int32_t
-          ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(229,50): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-          with
-          [
-              T=int32_t
-          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(147): warning C4715: 'AIComponent::ExecuteStateLogic': not all control paths return a value
   AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\\AI\bin\Debug-Win32\AI\AI.exe

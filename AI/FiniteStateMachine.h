@@ -2,7 +2,6 @@
 
 #include"Platform.h"
 
-
 namespace fsm {
 
 	enum States {
@@ -14,6 +13,13 @@ namespace fsm {
 		STATE_DEFEND = 3,
 		STATE_FLEE = 4,
 		STATE_DIE = 5
+	};
+
+
+	class IStateLogic {
+	public:
+
+		virtual void execute() = 0;
 	};
 
 

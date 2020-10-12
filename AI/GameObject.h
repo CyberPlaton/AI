@@ -3,6 +3,7 @@
 class GameObject;
 
 #include"FiniteStateMachine.h"
+#include"Platform.h"
 
 struct GraphicsComponent {
 
@@ -75,8 +76,85 @@ struct PhysicsComponent {
 };
 
 
-
+/*
+Note:
+	- we do not use the message-event-system, consider using it in "real" engine.
+	- state-machine for functions and logic.
+	
+*/
 struct AIComponent {
+
+	AIComponent(GameObject* go) {
+
+		m_ManagedObject = go;
+		m_State = new fsm::State(fsm::States::STATE_WAIT);
+	}
+
+	~AIComponent() = default;
+
+	void MapState(std::string name, fsm::IStateLogic* logic) {
+
+		m_StateLogicMap.insert(std::make_pair(name, logic));
+	}
+
+	void UnmapLogic(std::string name) {
+
+		m_StateLogicMap.erase(m_StateLogicMap.find(name));
+	}
+
+	void ChangeState(fsm::States newState) {
+		m_State->NewState(newState);
+	}
+
+	void Update() {
+		ExecuteStateLogic();
+	}
+
+
+	bool ExecuteStateLogic() {
+		switch (m_State->GetState())
+		{
+		case fsm::STATE_INVALID:
+			return false;
+			break;
+
+		case fsm::STATE_WAIT:
+
+			m_StateLogicMap.at("wait")->execute();
+			break;
+
+		case fsm::STATE_SEARCH:
+
+			m_StateLogicMap.at("search")->execute();
+			break;
+
+		case fsm::STATE_ATTACK:
+			break;
+
+		case fsm::STATE_DEFEND:
+			break;
+
+		case fsm::STATE_FLEE:
+			break;
+
+		case fsm::STATE_DIE:
+			break;
+
+		default:
+			return false;
+			break;
+		}
+	};
+
+	std::map<std::string, fsm::IStateLogic*> m_StateLogicMap;
+	GameObject* m_ManagedObject;
+	fsm::State* m_State;
+
+
+	// Direction to move of managed gameobject.
+	float m_MoveDirectionX;
+	float m_MoveDirectionY;
+
 
 };
 
@@ -127,7 +205,7 @@ public:
 		this->physicsCmp = new PhysicsComponent(xpos, ypos);
 		physicsCmp->m_XDirection = xdir;
 		physicsCmp->m_YDirection = ydir;
-		physicsCmp->m_Size = 2.0;
+		physicsCmp->m_Size = 3.0;
 		physicsCmp->m_Acceleration = 1.0;
 		physicsCmp->m_Velocity = 3.142;
 		physicsCmp->m_IsCollidable = true;
@@ -143,7 +221,7 @@ public:
 
 
 		Move(physicsCmp->m_XDirection, physicsCmp->m_YDirection, physicsCmp->m_Acceleration);
-
+		
 
 		if (physicsCmp->m_XPos + physicsCmp->m_Size >= width) {
 			m_Alive = false;
