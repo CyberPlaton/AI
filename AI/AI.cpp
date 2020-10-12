@@ -1,5 +1,6 @@
 #include"AI.h"
 
+
 int main()
 {
 	AI demo;
@@ -16,8 +17,9 @@ bool AI::OnUserCreate() {
 	using namespace std;
 
 	cout << APP_COLOR << "Program initialized. Starting..." << white << endl;
-	_initScene();
 
+	SetPixelMode(olc::Pixel::ALPHA);
+	_initScene();
 
 	return true;
 }
@@ -27,7 +29,13 @@ bool AI::OnUserUpdate(float fElapsedTime) {
 
 	_handleKeyboard();
 	_update(fElapsedTime);
+
+	Clear(olc::VERY_DARK_GREY);
+#ifdef _DEBUG
+	_drawDebugGrid();
+#endif // _DEBUG
 	_draw();
+
 
 	return true;
 }
@@ -48,10 +56,6 @@ void AI::_initScene() {
 void AI::_draw() {
 
 	using namespace olc;
-
-
-	Clear(WHITE);
-
 
 	for (auto it : g_Objects) {
 	
@@ -89,13 +93,38 @@ void AI::_draw() {
 #pragma omp parallel
 	for (auto it : g_Objects) {
 		DrawCircle(vi2d(it->physicsCmp->m_XPos + it->physicsCmp->m_Size / 2, it->physicsCmp->m_YPos + it->physicsCmp->m_Size / 2), it->physicsCmp->m_Size, olc::DARK_GREEN, 255);
-	}
+	}	
 
 
 	std::string mouse_pos = "MOUSEPOS ( " + std::to_string(GetMousePos().x) + ":" + std::to_string(GetMousePos().y) + " )";
 	DrawString(vi2d(0, 0), mouse_pos, olc::BLACK, 1);
+	DrawString(vi2d(g_Objects[0]->physicsCmp->m_XPos-20, g_Objects[0]->physicsCmp->m_YPos-10), "Creator", olc::DARK_RED);
 
 }
+
+
+
+void AI::_drawDebugGrid() {
+
+	using namespace olc;
+
+	int w = ScreenWidth();
+	int h = ScreenHeight();
+	int offsetx = w/47;
+	int offsety = h/35;
+
+
+	for (int i = 0; i < w; i += offsetx) {
+
+		DrawLine(vi2d(i, 0), vi2d(i, h), olc::DARK_YELLOW);
+	}
+
+	for (int j = 0; j < h; j += offsety) {
+
+		DrawLine(vi2d(0, j), vi2d(w, j), olc::DARK_YELLOW);
+	}
+}
+
 
 
 #include<algorithm>
@@ -182,12 +211,24 @@ void AI::_handleKeyboard() {
 
 
 	if(GetMouse(0).bReleased){
+	
+		using namespace olc;
+
+		vi2d posvec = vi2d(g_Objects[0]->physicsCmp->m_XPos - ScreenWidth()/2, g_Objects[0]->physicsCmp->m_YPos - ScreenHeight()/2);
+		posvec = posvec.norm();
+
+		vi2d dirvec = vi2d(g_Objects[0]->physicsCmp->m_XDirection - ScreenWidth() / 2, g_Objects[0]->physicsCmp->m_YDirection - ScreenHeight() / 2);
+		//dirvec = dirvec.norm();
 		
-		Bullet* b = new Bullet(g_Objects[0]->physicsCmp->m_XPos + 2 - g_Objects[0]->physicsCmp->m_Size / 2, g_Objects[0]->physicsCmp->m_YPos + 2 - g_Objects[0]->physicsCmp->m_Size / 2,
-			g_Objects[0]->physicsCmp->m_XDirection, g_Objects[0]->physicsCmp->m_YDirection,
-			255, 0, 0, GraphicsComponent::GeometryType::CIRCLE);
+
+		Bullet* b = new Bullet(g_Objects[0]->physicsCmp->m_XPos+posvec.x, g_Objects[0]->physicsCmp->m_YPos+posvec.y,
+								posvec.x+dirvec.x, posvec.y+dirvec.y,
+								254, 0, 0, g_Objects[0], GraphicsComponent::GeometryType::CIRCLE);
+
+
 
 		g_Objects.push_back(b);
+		static_cast<Ship*>(g_Objects[0])->m_SlaveBullets.push_back(b); // Save bullet in slave objects.
 	}
 
 }

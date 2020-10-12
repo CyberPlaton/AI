@@ -93,28 +93,42 @@ public:
 	virtual void Move(float xdir, float ydir, float acceleration){}
 	virtual void ApplyGravitation(float xdir, float ydir){}
 
+
+
+
 	AIComponent* aiCmp = nullptr;
 	PhysicsComponent* physicsCmp = nullptr;
 	GraphicsComponent* graphicsCmp = nullptr;
 	fsm::State* stateCmp = nullptr;
 
 	bool m_Alive;
+	std::string m_ID; // Every bullets gets an ID, maybe ships too.
 };
 
 
-#include<iostream>
+
 class Bullet : public GameObject{
 public:
 	Bullet(float xpos, float ypos, float xdir, float ydir,
-			float r, float g, float b, GraphicsComponent::GeometryType type = GraphicsComponent::GeometryType::LINE) {
+			float r, float g, float b,
+		GameObject* master, GraphicsComponent::GeometryType type = GraphicsComponent::GeometryType::LINE) {
+
+
+		std::stringstream stream;
+		stream << static_cast<const void*>(this);
+		m_ID = stream.str();
+
+
 
 		m_Alive = true;
-
+		m_MasterObject = master;
 		this->graphicsCmp = new GraphicsComponent(xpos, ypos, r, g, b, type);
-		this->physicsCmp = new PhysicsComponent(xpos, ypos);
-		physicsCmp->m_Size = 2.0;
 
-		physicsCmp->m_Acceleration = 1000.0;
+		this->physicsCmp = new PhysicsComponent(xpos, ypos);
+		physicsCmp->m_XDirection = xdir;
+		physicsCmp->m_YDirection = ydir;
+		physicsCmp->m_Size = 2.0;
+		physicsCmp->m_Acceleration = 1.0;
 		physicsCmp->m_Velocity = 3.142;
 		physicsCmp->m_IsCollidable = true;
 	}
@@ -132,30 +146,36 @@ public:
 
 
 		if (physicsCmp->m_XPos + physicsCmp->m_Size >= width) {
-			physicsCmp->m_XPos = width - (physicsCmp->m_Size);
+			m_Alive = false;
 		}
 		if (physicsCmp->m_XPos <= 0) {
-			physicsCmp->m_XPos = 1;
+			m_Alive = false;
 		}
 		if (physicsCmp->m_YPos + physicsCmp->m_Size >= height) {
-			physicsCmp->m_YPos = height - (physicsCmp->m_Size);
+			m_Alive = false;
 		}
 		if (physicsCmp->m_YPos <= 0) {
-			physicsCmp->m_YPos = 1;
+
+			m_Alive = false;
 		}
 
 
 		graphicsCmp->m_XPos = physicsCmp->m_XPos;
 		graphicsCmp->m_YPos = physicsCmp->m_YPos;
 
+
+		if (physicsCmp->m_XPos == physicsCmp->m_XDirection &&
+			physicsCmp->m_YPos == physicsCmp->m_YDirection) {
+
+			std::cout << "Bullet reached target and ceased." << std::endl;
+			m_Alive = false;
+		}
+
 		m_FPS = dt;
 	}
 
 
 	void Move(float xdir, float ydir, float acceleration) override {
-
-		xdir = -1.0;
-		ydir = -1.0;
 
 		// 0.16f is FPS, but we may find a way to make it flexible.
 		physicsCmp->m_Acceleration = acceleration;
@@ -183,6 +203,8 @@ public:
 
 		bool collision = false;
 
+		if (obj == m_MasterObject) return false; // bullets dont collide with own shooter
+
 		float own_x_pos = physicsCmp->m_XPos;
 		float own_y_pos = physicsCmp->m_YPos;
 		int own_size = physicsCmp->m_Size;
@@ -208,6 +230,7 @@ public:
 
 private:
 	float m_FPS;
+	GameObject* m_MasterObject = nullptr;
 
 private:
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
-#include"ColorConsole.h"
+#include "ColorConsole.h"
 
 
 class Ship : public GameObject{
@@ -72,6 +72,12 @@ public:
 
 		if (!obj->m_Alive) return false;
 
+		for (auto it : m_SlaveBullets) {
+
+			if (strcmp(it->m_ID.c_str(), obj->m_ID.c_str()) == 0) { // Dont collide with own bullets.
+				return false;
+			}
+		}
 
 		bool collision = false;
 
@@ -110,6 +116,9 @@ public:
 
 	float m_PreviousXPos;
 	float m_PreviousYPos;
+
+	std::vector<Bullet*> m_SlaveBullets; // e.g. to non collide with.
+
 };
 
 

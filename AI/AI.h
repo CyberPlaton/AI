@@ -26,5 +26,6 @@ private:
 	void _draw();
 	void _update(float dt);
 	void _handleKeyboard();
+	void _drawDebugGrid();
 
 };
