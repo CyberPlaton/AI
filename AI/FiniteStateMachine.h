@@ -7,7 +7,7 @@ namespace fsm {
 	enum States {
 
 		STATE_INVALID = -1,
-		STATE_WAIT = 0,
+		STATE_PATROL = 0,
 		STATE_SEARCH = 1,
 		STATE_ATTACK = 2,
 		STATE_DEFEND = 3,

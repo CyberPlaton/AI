@@ -10,11 +10,12 @@ public:
 	void execute() override {
 
 		// Get random move direction
+		
 		float dirx = rand() % 2;
 		float diry = rand() % 2;
-		if (dirx == 0) dirx = -1.0f;
-		if (diry == 0) diry = -1.0f;
-
+		if (dirx == 0) dirx = -1.0f; dirx *= 100.f;
+		if (diry == 0) diry = -1.0f; diry *= 100.f;
+		
 
 		// fly around...
 		GameObject* object = m_AICmp->m_ManagedObject;
@@ -35,20 +36,79 @@ public:
 	AIComponent* m_AICmp = nullptr;
 };
 
-class AIWait : public fsm::IStateLogic {
+class AIPatrol : public fsm::IStateLogic {
 public:
-	AIWait(AIComponent* cmp) {
+
+	// Circle = true	=> If endpoint reached restart patroling.
+	// Circle = false	=> Transit to other specified state at endpoint.
+	AIPatrol(AIComponent* cmp, bool circle = true, fsm::States endpointstate = fsm::STATE_INVALID) {
+
 		m_AICmp = cmp;
-	}
 
-	void execute() override {
-
-		if(m_AICmp->m_ManagedObject->m_Alive) {
-			
-			// do nothing
+		// specify endpoint state.
+		m_TransitState = endpointstate;
+		if (circle == false) { // Enforce a valid state to transit to.
+			if (m_TransitState == fsm::STATE_INVALID) throw("VALID TRANSIT STATE NOT SPECIFIED.");
 		}
 	}
 
+
+	void AddPatrolPoint(olc::vi2d v) {
+
+		m_PatrolPoints.push_back(v);
+	}
+
+
+	void execute() override {
+
+		using namespace olc;
+		using namespace std;
+
+		Ship* object = static_cast<Ship*>(m_AICmp->m_ManagedObject);
+
+		if (object->m_Alive) {
+			if (m_PatrolPointReached == false) {
+
+				object->physicsCmp->m_Acceleration += 1.5f;
+
+				vi2d p1 = vi2d(m_PatrolPoints[0].x, m_PatrolPoints[0].y);
+				vi2d p2 = vi2d(object->physicsCmp->m_XPos, object->physicsCmp->m_YPos);
+
+				vi2d endpoint = p1 - p2;
+
+				object->Move(endpoint.x, endpoint.y, object->physicsCmp->m_Acceleration);
+
+
+				cout << color(colors::CYAN) << "AI left to reach patrolpoint -- " << endpoint.str() << white << endl;
+				if (endpoint == vi2d(0, 0)) m_PatrolPointReached = true;
+
+			}
+			else {
+
+				if (m_TransitState != fsm::STATE_INVALID) { // Valid transit state given => no looping of patrol route.
+
+					object->aiCmp->ChangeState(m_TransitState);
+				}
+				else { // circle = true => looping of patrol route.
+
+					// Append the current reached patrol point to the end.
+					m_PatrolPoints.push_back(m_PatrolPoints[0]);
+					m_PatrolPoints.erase(m_PatrolPoints.begin());
+
+					m_PatrolPointReached = false;
+				}
+			}
+
+		}
+		else {
+			cout << color(colors::CYAN) << "AI DEAD" << white << endl;
+		}
+
+	}
+
+	fsm::States m_TransitState;
+	bool m_PatrolPointReached = false;
+	std::vector<olc::vi2d> m_PatrolPoints;
 	AIComponent* m_AICmp = nullptr;
 };
 
@@ -107,8 +167,17 @@ void AI::_initScene() {
 	Ship* s2 = new Ship(50, 100, 100, 100, 25, GraphicsComponent::GeometryType::RECTANGLE);
 	s2->m_ID = "AI";
 	s2->AddAIComponent();
-	s2->aiCmp->MapState("wait", new AIWait(s2->aiCmp));
+	s2->aiCmp->MapState("patrol", new AIPatrol(s2->aiCmp));
 	s2->aiCmp->MapState("search", new AISearch(s2->aiCmp));
+	s2->aiCmp->MapState("patrol", new AIPatrol(s2->aiCmp, true));
+
+	AIPatrol* p = static_cast<AIPatrol*>(s2->aiCmp->m_StateLogicMap.at("patrol"));
+	p->AddPatrolPoint(olc::vi2d(400, 400));
+	p->AddPatrolPoint(olc::vi2d(10, 0));
+	p->AddPatrolPoint(olc::vi2d(100, 0));
+	p->AddPatrolPoint(olc::vi2d(0, 500));
+
+
 	s2->aiCmp->ChangeState(fsm::STATE_SEARCH);
 
 
@@ -269,31 +338,40 @@ void AI::_handleKeyboard() {
 
 	if (GetKey(olc::Key::W).bHeld) { // Holding down button.
 
-		g_Objects[0]->Move(0.0, -1.0, speed);
+		g_Objects[0]->Move(0.0, -100.0, speed);
 		cout << APP_COLOR << "Key::W " << white << endl;
 	}
 	
 	if (GetKey(olc::Key::A).bHeld) {
 
-		g_Objects[0]->Move(-1.0, 0.0, speed);
+		g_Objects[0]->Move(-100.0, 0.0, speed);
 		cout << APP_COLOR << "Key::A" << white << endl;
 	}
 
 	if (GetKey(olc::Key::S).bHeld) {
 
-		g_Objects[0]->Move(0.0, 1.0, speed);
+		g_Objects[0]->Move(0.0, 100.0, speed);
 		cout << APP_COLOR << "Key::S" << white << endl;
 	}
 
 	if (GetKey(olc::Key::D).bHeld) {
 
-		g_Objects[0]->Move(1.0, 0.0, speed);
+		g_Objects[0]->Move(100.0, 0.0, speed);
 		cout << APP_COLOR << "Key::D" << white << endl;
 	}
 
 	if (GetKey(olc::Key::ESCAPE).bReleased) {
 		cout << APP_COLOR << "Key::ESCAPE" << white << endl;
 		exit(0);
+	}
+
+	if (GetKey(olc::Key::SPACE).bReleased) {
+
+		for (auto it : g_Objects) {
+			if (it->aiCmp != nullptr) {
+				it->aiCmp->ChangeState(fsm::STATE_PATROL);
+			}
+		}
 	}
 }
 

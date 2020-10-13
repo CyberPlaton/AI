@@ -80,14 +80,25 @@ struct PhysicsComponent {
 Note:
 	- we do not use the message-event-system, consider using it in "real" engine.
 	- state-machine for functions and logic.
+	- further we cant use scripts, as we do not use separate threads!
+	  And thus the definition of statelogic can not be a loop.
 	
 */
+
+// Holds data needed for "understanding" the environment and computing solutions.
+struct AIInformationAccumulator {
+
+
+	// Whether this AI-Instance was hit.
+	bool m_WasHit = false;
+};
+
 struct AIComponent {
 
 	AIComponent(GameObject* go) {
 
 		m_ManagedObject = go;
-		m_State = new fsm::State(fsm::States::STATE_WAIT);
+		m_State = new fsm::State(fsm::States::STATE_SEARCH);
 	}
 
 	~AIComponent() = default;
@@ -107,7 +118,10 @@ struct AIComponent {
 	}
 
 	void Update() {
-		ExecuteStateLogic();
+		
+		if (!ExecuteStateLogic()) {
+			std::cout << "COULDNT EXECUTE AI STATELOGIC" << std::endl;
+		}
 	}
 
 
@@ -118,9 +132,9 @@ struct AIComponent {
 			return false;
 			break;
 
-		case fsm::STATE_WAIT:
+		case fsm::STATE_PATROL:
 
-			m_StateLogicMap.at("wait")->execute();
+			m_StateLogicMap.at("patrol")->execute();
 			break;
 
 		case fsm::STATE_SEARCH:
@@ -177,7 +191,6 @@ public:
 	AIComponent* aiCmp = nullptr;
 	PhysicsComponent* physicsCmp = nullptr;
 	GraphicsComponent* graphicsCmp = nullptr;
-	fsm::State* stateCmp = nullptr;
 
 	bool m_Alive;
 	std::string m_ID; // Every bullets gets an ID, maybe ships too.
@@ -205,7 +218,7 @@ public:
 		this->physicsCmp = new PhysicsComponent(xpos, ypos);
 		physicsCmp->m_XDirection = xdir;
 		physicsCmp->m_YDirection = ydir;
-		physicsCmp->m_Size = 3.0;
+		physicsCmp->m_Size = 4.0;
 		physicsCmp->m_Acceleration = 1.0;
 		physicsCmp->m_Velocity = 3.142;
 		physicsCmp->m_IsCollidable = true;
@@ -255,12 +268,12 @@ public:
 
 	void Move(float xdir, float ydir, float acceleration) override {
 
-		// 0.16f is FPS, but we may find a way to make it flexible.
+
 		physicsCmp->m_Acceleration = acceleration;
 		physicsCmp->m_Velocity += physicsCmp->m_Acceleration * m_FPS;
 
 		physicsCmp->m_XPos += xdir * (physicsCmp->m_Velocity * m_FPS); // move in x look(!) direction.
-		physicsCmp->m_YPos += ydir * (physicsCmp->m_Velocity * m_FPS); // move in y look (!) direction.
+		physicsCmp->m_YPos += ydir * (physicsCmp->m_Velocity * m_FPS); // move in y look(!) direction.
 
 
 		physicsCmp->m_Velocity += m_FPS * (-physicsCmp->m_Velocity);

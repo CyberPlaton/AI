@@ -63,12 +63,17 @@ public:
 
 	 void Move(float xdir, float ydir, float acceleration) override {
 
-		// 0.16f is FPS, but we may find a way to make it flexible.
-		physicsCmp->m_Acceleration = acceleration;
+
+		 physicsCmp->m_Acceleration = acceleration;
 		physicsCmp->m_Velocity += physicsCmp->m_Acceleration * m_FPS;
 
+		/*
 		physicsCmp->m_XPos += (100.0) * xdir *(physicsCmp->m_Velocity * m_FPS); // move in x look(!) direction.
-		physicsCmp->m_YPos += (100.0) * ydir *(physicsCmp->m_Velocity * m_FPS); // move in y look (!) direction.
+		physicsCmp->m_YPos += (100.0) * ydir *(physicsCmp->m_Velocity * m_FPS); // move in y look(!) direction.
+		*/
+		physicsCmp->m_XPos += xdir * (physicsCmp->m_Velocity * m_FPS); // move in x look(!) direction.
+		physicsCmp->m_YPos += ydir * (physicsCmp->m_Velocity * m_FPS); // move in y look(!) direction.
+
 
 
 		physicsCmp->m_Acceleration = 0;
