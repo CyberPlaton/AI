@@ -89,11 +89,21 @@ Note:
 struct AIInformationAccumulator {
 
 
+
 	// Whether this AI-Instance was hit.
 	bool m_WasHit = false;
+
 };
 
 struct AIComponent {
+
+	enum AILevel {
+		AI_LEVEL_INVALID = -1,
+		AI_LEVEL_EASY = 0,
+		AI_LEVEL_NORMAL = 1,
+		AI_LEVEL_HARD = 2
+	};
+
 
 	AIComponent(GameObject* go) {
 
@@ -143,6 +153,8 @@ struct AIComponent {
 			break;
 
 		case fsm::STATE_ATTACK:
+
+			m_StateLogicMap.at("shoot_player")->execute();
 			break;
 
 		case fsm::STATE_DEFEND:
@@ -163,13 +175,11 @@ struct AIComponent {
 	std::map<std::string, fsm::IStateLogic*> m_StateLogicMap;
 	GameObject* m_ManagedObject;
 	fsm::State* m_State;
-
+	AILevel AILevel = AI_LEVEL_NORMAL;
 
 	// Direction to move of managed gameobject.
 	float m_MoveDirectionX;
 	float m_MoveDirectionY;
-
-
 };
 
 
@@ -184,7 +194,7 @@ public:
 	virtual void ResolveCollision(GameObject* obj) {}
 	virtual void Move(float xdir, float ydir, float acceleration){}
 	virtual void ApplyGravitation(float xdir, float ydir){}
-
+	bool IsAlive() { return m_Alive; }
 
 
 
@@ -193,7 +203,7 @@ public:
 	GraphicsComponent* graphicsCmp = nullptr;
 
 	bool m_Alive;
-	std::string m_ID; // Every bullets gets an ID, maybe ships too.
+	std::string m_ID; // Every Object has an identifier whether a name or stringified address.
 };
 
 
@@ -218,9 +228,9 @@ public:
 		this->physicsCmp = new PhysicsComponent(xpos, ypos);
 		physicsCmp->m_XDirection = xdir;
 		physicsCmp->m_YDirection = ydir;
-		physicsCmp->m_Size = 4.0;
+		physicsCmp->m_Size = 6.0;
 		physicsCmp->m_Acceleration = 1.0;
-		physicsCmp->m_Velocity = 3.142;
+		physicsCmp->m_Velocity = 2.223;
 		physicsCmp->m_IsCollidable = true;
 	}
 
@@ -296,12 +306,14 @@ public:
 
 		if (obj == m_MasterObject) return false; // bullets dont collide with own shooter
 
+		int offset_due_to_lag = 5;
+
 		float own_x_pos = physicsCmp->m_XPos;
 		float own_y_pos = physicsCmp->m_YPos;
 		int own_size = physicsCmp->m_Size;
 
 		if (own_x_pos < (obj->physicsCmp->m_XPos + obj->physicsCmp->m_Size) &&
-			(own_x_pos + own_size) > obj->physicsCmp->m_XPos &&
+			(own_x_pos + own_size) >  obj->physicsCmp->m_XPos &&
 			own_y_pos < (obj->physicsCmp->m_YPos + obj->physicsCmp->m_Size) &&
 			(own_y_pos + own_size) > obj->physicsCmp->m_YPos) {
 
@@ -318,6 +330,7 @@ public:
 
 		m_Alive = false;
 	}
+
 
 private:
 	float m_FPS;
