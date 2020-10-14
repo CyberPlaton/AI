@@ -143,6 +143,15 @@ public:
 				if (!it->m_Alive) {
 					
 
+					/*
+					TODO:
+
+					Remove bug here.
+					On many shooting bullets we get an 'vector subscript out of range' error
+					due to bad index for erase (I think).
+					*/
+
+
 					const std::vector<Bullet*>::iterator i = std::find(m_SlaveBullets.begin(), m_SlaveBullets.end(), it);
 					int index = std::distance(m_SlaveBullets.begin(), i);
 
