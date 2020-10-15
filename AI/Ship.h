@@ -34,8 +34,6 @@ public:
 		int height = 705;
 		m_FPS = dt;
 
-		RemoveDeadBullets();
-
 		ApplyGravitation(0.0, 0.0); // Apply gravitation in direction of screen down.
 		if (aiCmp != nullptr) {
 			aiCmp->Update();
@@ -137,11 +135,14 @@ public:
 
 		using namespace std;
 
+
 		try {
+
+
 			// Check for dead bullets.
 			for (auto it : m_SlaveBullets) {
 				if (!it->m_Alive) {
-					
+
 
 					/*
 					TODO:
@@ -151,19 +152,27 @@ public:
 					due to bad index for erase (I think).
 					*/
 
+					// Seems to be solved. Check for some time...
+
 
 					const std::vector<Bullet*>::iterator i = std::find(m_SlaveBullets.begin(), m_SlaveBullets.end(), it);
 					int index = std::distance(m_SlaveBullets.begin(), i);
 
 					if (i != m_SlaveBullets.end()) {
 						m_SlaveBullets.erase(m_SlaveBullets.begin() + index);
+						cout << color(colors::RED) << "Erased bullet from -- "<< m_ID << white << endl;
 					}
 				}
 			}
+
+
+
 		}
 		catch (const char* err) {
 			cout << color(colors::RED) << "Error on erasing element -- in 'RemoveDeadBullets()'." << white << endl;
 		}
+
+
 	}
 
 

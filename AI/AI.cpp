@@ -367,6 +367,7 @@ void AI::_update(float dt) {
 
 		if (it->IsAlive()) {
 			it->Update(dt);
+			it->RemoveDeadBullets();
 
 			if (it->aiCmp != nullptr) {
 

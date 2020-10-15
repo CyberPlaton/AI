@@ -194,6 +194,7 @@ public:
 	virtual void ResolveCollision(GameObject* obj) {}
 	virtual void Move(float xdir, float ydir, float acceleration){}
 	virtual void ApplyGravitation(float xdir, float ydir){}
+	virtual void RemoveDeadBullets() {}
 	bool IsAlive() { return m_Alive; }
 
 

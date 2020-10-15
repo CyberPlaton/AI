@@ -2,11 +2,11 @@
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   AI.cpp
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(53,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(231,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(233,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(46,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(52,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(155,22): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(232,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(234,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(44,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(50,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(169,22): warning C4101: 'err': unreferenced local variable
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(14,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(15,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(75,66): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
@@ -124,20 +124,10 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(326,47): warning C4244: 'argum
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(326,25): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(361,52): warning C4244: '=': conversion from 'int32_t' to 'float', possible loss of data
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(362,52): warning C4244: '=': conversion from 'int32_t' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(387,24): warning C4101: 'err': unreferenced local variable
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(416,22): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(420,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(469,82): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-          with
-          [
-              T=int32_t
-          ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(469,42): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-          with
-          [
-              T=int32_t
-          ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(470,76): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(388,24): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(417,22): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(421,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(470,82): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
@@ -147,27 +137,33 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(470,42): warning C4244: 'argum
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(475,24): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(471,76): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(475,12): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(471,42): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int32_t
           ]
-  GameObject.cpp
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(53,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(231,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(233,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(476,24): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int32_t
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\AI.cpp(476,12): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int32_t
+          ]
   Ship.cpp
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(53,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(231,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(233,1): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(46,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(52,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(155,22): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(232,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(234,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(44,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(50,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Ship.h(169,22): warning C4101: 'err': unreferenced local variable
   Generating Code...
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\GameObject.h(173): warning C4715: 'AIComponent::ExecuteStateLogic': not all control paths return a value
   AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\\AI\bin\Debug-Win32\AI\AI.exe
