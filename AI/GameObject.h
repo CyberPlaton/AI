@@ -25,9 +25,6 @@ struct GraphicsComponent {
 
 	~GraphicsComponent() = default;
 
-	void Draw() {
-
-	}
 
 	// Geometry
 	GeometryType m_Geometry;
@@ -40,6 +37,9 @@ struct GraphicsComponent {
 	float m_R;
 	float m_G;
 	float m_B;
+
+	// Property
+	bool m_IsVisible = true;
 };
 
 
@@ -84,17 +84,6 @@ Note:
 	  And thus the definition of statelogic can not be a loop.
 	
 */
-
-// Holds data needed for "understanding" the environment and computing solutions.
-struct AIInformationAccumulator {
-
-
-
-	// Whether this AI-Instance was hit.
-	bool m_WasHit = false;
-
-};
-
 struct AIComponent {
 
 	enum AILevel {
@@ -195,8 +184,7 @@ public:
 	virtual void Move(float xdir, float ydir, float acceleration){}
 	virtual void ApplyGravitation(float xdir, float ydir){}
 	virtual void RemoveDeadBullets() {}
-	bool IsAlive() { return m_Alive; }
-
+	virtual bool IsAlive() { return false; }
 
 
 	AIComponent* aiCmp = nullptr;
@@ -231,7 +219,7 @@ public:
 		physicsCmp->m_YDirection = ydir;
 		physicsCmp->m_Size = 6.0;
 		physicsCmp->m_Acceleration = 1.0;
-		physicsCmp->m_Velocity = 2.223;
+		physicsCmp->m_Velocity = 2.5f;
 		physicsCmp->m_IsCollidable = true;
 	}
 
@@ -331,6 +319,9 @@ public:
 
 		m_Alive = false;
 	}
+
+
+	bool IsAlive() override { return m_Alive; }
 
 
 private:

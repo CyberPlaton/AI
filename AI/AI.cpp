@@ -1,5 +1,29 @@
 #include"AI.h"
 
+bool g_bDrawDebugGrid = false;
+
+AI* AI::m_AIApp = 0;
+AI* AI::Get() {
+
+	if (m_AIApp == nullptr) {
+		m_AIApp = new AI();
+		m_AIApp->sAppName = "AI";
+		return m_AIApp;
+	}
+	else {
+		return m_AIApp;
+	}
+}
+
+
+void AI::Del() {
+
+	if (m_AIApp) {
+		delete m_AIApp;
+	}
+}
+
+
 
 class AISearch : public fsm::IStateLogic {
 public:
@@ -24,7 +48,7 @@ public:
 
 			object->Move(dirx, diry, object->physicsCmp->m_Acceleration);
 
-			std::cout << APP_COLOR << "AI Moved" << white << std::endl;
+			std::cout << APP_COLOR << object->m_ID <<" Moved." << white << std::endl;
 
 
 			if (object->physicsCmp->m_XPos >= 900 || object->physicsCmp->m_XPos <= 1) m_AICmp->m_MoveDirectionX += dirx;
@@ -64,7 +88,7 @@ public:
 		using namespace olc;
 		using namespace std;
 
-		Ship* object = static_cast<Ship*>(m_AICmp->m_ManagedObject);
+		Ship* object = reinterpret_cast<Ship*>(m_AICmp->m_ManagedObject);
 
 		if (object->m_Alive) {
 			if (m_PatrolPointReached == false) {
@@ -79,7 +103,7 @@ public:
 				object->Move(endpoint.x, endpoint.y, object->physicsCmp->m_Acceleration);
 
 
-				cout << color(colors::CYAN) << "AI left to reach patrolpoint -- " << endpoint.str() << white << endl;
+				cout << color(colors::CYAN) << object->m_ID <<" left to reach patrolpoint -- " << endpoint.str() << white << endl;
 				if (endpoint == vi2d(0, 0)) m_PatrolPointReached = true;
 
 			}
@@ -111,7 +135,7 @@ public:
 
 		}
 		else {
-			cout << color(colors::CYAN) << "AI DEAD" << white << endl;
+			cout << color(colors::CYAN) << object->m_ID <<" DEAD." << white << endl;
 		}
 
 	}
@@ -132,18 +156,47 @@ public:
 
 	}
 
+
 	void execute() override {
+
+		_evade();
+		_shoot();
+	}
+
+
+	static int shotBullets;
+	Ship* m_AIShip = nullptr;
+	olc::vi2d m_EnemyPos;
+	AIComponent* m_AICmp = nullptr;
+
+private:
+
+	// Evade incomming bullets or obstacles etc
+	void _evade() {
+
+	}
+
+	void _shootOnSight() {
 
 		using namespace std;
 		using namespace olc;
 
-		cout << APP_COLOR << "AI shot Bullets count -- "<< shotBullets << white << endl;
+		cout << APP_COLOR << "AI shot Bullets count -- " << shotBullets << white << endl;
+	}
+
+	// Shoot bullet at some position.
+	void _shoot() {
+
+		using namespace std;
+		using namespace olc;
+
+		cout << APP_COLOR << "AI shot Bullets count -- " << shotBullets << white << endl;
 
 		if (m_AIShip->m_SlaveBullets.size() > 0) return;
 
 
-		// TEST: Shoot on player.
-		vi2d posvec = vi2d(m_AIShip->physicsCmp->m_XPos - 960/2, m_AIShip->physicsCmp->m_YPos - 720/2);
+		// TEST: Shoot on player. Display dimensions are fixed, as we cant get them inhere dynamically..
+		vi2d posvec = vi2d(m_AIShip->physicsCmp->m_XPos - 960 / 2, m_AIShip->physicsCmp->m_YPos - 720 / 2);
 		posvec = posvec.norm();
 
 		vi2d dirvec = vi2d(g_Objects[0]->physicsCmp->m_XPos, g_Objects[0]->physicsCmp->m_YPos);
@@ -166,8 +219,8 @@ public:
 		}
 		offsetx = rand() % specifier;
 		offsety = rand() % specifier;
-		offsetx = (offsetx <= specifier/2) ? -offsetx : offsetx;
-		offsety = (offsety <= specifier/2) ? -offsety : offsety;
+		offsetx = (offsetx <= specifier / 2) ? -offsetx : offsetx;
+		offsety = (offsety <= specifier / 2) ? -offsety : offsety;
 
 
 		Bullet* b = new Bullet(m_AIShip->physicsCmp->m_XPos + posvec.x, m_AIShip->physicsCmp->m_YPos + posvec.y,
@@ -180,10 +233,7 @@ public:
 		m_AIShip->m_SlaveBullets.push_back(b); // Save bullet in slave objects.
 		shotBullets++;
 	}
-	static int shotBullets;
-	Ship* m_AIShip = nullptr;
-	olc::vi2d m_EnemyPos;
-	AIComponent* m_AICmp = nullptr;
+
 };
 int AIShootBullet::shotBullets = 0;
 
@@ -223,10 +273,12 @@ bool AI::OnUserUpdate(float fElapsedTime) {
 	_update(fElapsedTime);
 
 
-	Clear(olc::WHITE);
-#ifdef _DEBUG
-	_drawDebugGrid();
-#endif // _DEBUG
+	Clear(olc::BLACK);
+
+	if (g_bDrawDebugGrid) {
+		_drawDebugGrid();
+	}
+
 	_draw();
 
 
@@ -239,7 +291,7 @@ void AI::_initScene() {
 	Ship* s1 = new Ship(500, 500, 150, 150, 255, GraphicsComponent::GeometryType::RECTANGLE);
 	s1->m_ID = "Creator";
 
-	// AI controlled ship
+	//First AI controlled ship
 	Ship* s2 = new Ship(50, 100, 100, 100, 25, GraphicsComponent::GeometryType::RECTANGLE);
 	s2->m_ID = "AI";
 	s2->AddAIComponent();
@@ -247,20 +299,54 @@ void AI::_initScene() {
 	s2->aiCmp->MapState("patrol", new AIPatrol(s2->aiCmp, false, fsm::STATE_ATTACK));
 	s2->aiCmp->MapState("shoot_player", new AIShootBullet(s2->aiCmp));
 
-	AIPatrol* p = static_cast<AIPatrol*>(s2->aiCmp->m_StateLogicMap.at("patrol"));
+	AIPatrol* p = reinterpret_cast<AIPatrol*>(s2->aiCmp->m_StateLogicMap.at("patrol"));
 	p->AddPatrolPoint(olc::vi2d(400, 400));
 	p->AddPatrolPoint(olc::vi2d(10, 0));
 	s2->aiCmp->ChangeState(fsm::STATE_PATROL);
 
 
 
+	//Second AI controlled ship
+	Ship* ai1 = new Ship(10, 10, 0, 0, 255, GraphicsComponent::GeometryType::RECTANGLE);
+	ai1->m_ID = "SKYNET";
+	ai1->AddAIComponent();
+	ai1->aiCmp->MapState("search", new AISearch(ai1->aiCmp));
+	ai1->aiCmp->MapState("patrol", new AIPatrol(ai1->aiCmp, true));
+	ai1->aiCmp->MapState("shoot_player", new AIShootBullet(ai1->aiCmp));
+
+	AIPatrol* p1 = reinterpret_cast<AIPatrol*>(ai1->aiCmp->m_StateLogicMap.at("patrol")); // Why am I doing this cast ????????
+	p1->AddPatrolPoint(olc::vi2d(700, 20));
+	p1->AddPatrolPoint(olc::vi2d(700, 25));
+	p1->AddPatrolPoint(olc::vi2d(700, 20));
+	p1->AddPatrolPoint(olc::vi2d(650, 35));
+	p1->AddPatrolPoint(olc::vi2d(600, 20));
+	p1->AddPatrolPoint(olc::vi2d(25, 25));
+	p1->AddPatrolPoint(olc::vi2d(50, 50));
+	p1->AddPatrolPoint(olc::vi2d(35, 100));
+	ai1->aiCmp->ChangeState(fsm::STATE_PATROL);
+
+
+	//Third AI controlled ship
+	Ship* ai2 = new Ship(550, 700, 255, 0, 255, GraphicsComponent::GeometryType::RECTANGLE);
+	ai2->m_ID = "TERMINATOR";
+	ai2->AddAIComponent();
+	ai2->aiCmp->MapState("search", new AISearch(ai2->aiCmp));
+	ai2->aiCmp->MapState("patrol", new AIPatrol(ai2->aiCmp, false, fsm::STATE_SEARCH));
+	ai2->aiCmp->MapState("shoot_player", new AIShootBullet(ai2->aiCmp));
+
+	AIPatrol* p2 = reinterpret_cast<AIPatrol*>(ai2->aiCmp->m_StateLogicMap.at("patrol"));
+	ai2->aiCmp->ChangeState(fsm::STATE_SEARCH);
+
+
+
 	// Define some obstacles
-	Ship* s3 = new Ship(450, 450, 125, 125, 125, GraphicsComponent::GeometryType::RECTANGLE);
-	Ship* s4 = new Ship(400, 450, 125, 125, 125, GraphicsComponent::GeometryType::RECTANGLE);
-	Ship* s5 = new Ship(350, 450, 125, 125, 125, GraphicsComponent::GeometryType::RECTANGLE);
-	Ship* s6 = new Ship(450, 500, 125, 125, 125, GraphicsComponent::GeometryType::RECTANGLE);
-	Ship* s7 = new Ship(500, 550, 125, 125, 125, GraphicsComponent::GeometryType::RECTANGLE);
+	Ship* s3 = new Ship(450, 450, 153, 153, 153, GraphicsComponent::GeometryType::RECTANGLE);
+	Ship* s4 = new Ship(400, 450, 153, 153, 153, GraphicsComponent::GeometryType::RECTANGLE);
+	Ship* s5 = new Ship(350, 450, 153, 153, 153, GraphicsComponent::GeometryType::RECTANGLE);
+	Ship* s6 = new Ship(450, 500, 153, 153, 153, GraphicsComponent::GeometryType::RECTANGLE);
+	Ship* s7 = new Ship(500, 550, 153, 153, 153, GraphicsComponent::GeometryType::RECTANGLE);
 	s3->m_ID = s4->m_ID = s5->m_ID = s6->m_ID = s7->m_ID = "Obstacle";
+
 
 	g_Objects.push_back(s1);
 	g_Objects.push_back(s2);
@@ -272,6 +358,12 @@ void AI::_initScene() {
 	g_Objects.push_back(s6);
 	g_Objects.push_back(s7);
 
+	g_Objects.push_back(ai1);
+	g_Objects.push_back(ai2);
+
+
+	// Hack solution to the vector-subscript-out-of-range error...
+	g_Objects.push_back(new Bullet(0, 0, 0, 0, 0, 0, 0, 0));
 }
 
 
@@ -282,10 +374,6 @@ void AI::_draw() {
 	for (auto it : g_Objects) {
 	
 		if (it->graphicsCmp->m_Geometry == 0) { // rect
-
-			//DrawRect(it->physicsCmp->m_XPos, it->physicsCmp->m_YPos, it->physicsCmp->m_Size, it->physicsCmp->m_Size,
-				//	Pixel(it->graphicsCmp->m_R, it->graphicsCmp->m_G, it->graphicsCmp->m_B));
-
 
 			FillRect(it->physicsCmp->m_XPos, it->physicsCmp->m_YPos, it->physicsCmp->m_Size, it->physicsCmp->m_Size,
 				Pixel(it->graphicsCmp->m_R, it->graphicsCmp->m_G, it->graphicsCmp->m_B));
@@ -341,12 +429,12 @@ void AI::_drawDebugGrid() {
 
 	for (int i = 0; i < w; i += offsetx) {
 
-		DrawLine(vi2d(i, 0), vi2d(i, h), olc::DARK_YELLOW);
+		DrawLine(vi2d(i, 0), vi2d(i, h), olc::GREY);
 	}
 
 	for (int j = 0; j < h; j += offsety) {
 
-		DrawLine(vi2d(0, j), vi2d(w, j), olc::DARK_YELLOW);
+		DrawLine(vi2d(0, j), vi2d(w, j), olc::GREY);
 	}
 }
 
@@ -357,6 +445,17 @@ void AI::_update(float dt) {
 
 	using namespace std;
 
+	/*
+	NOTE:
+
+	There is another little tiny bug. 
+
+	Definition:
+	If I do not fire a bullet in the beginnning, before the AI first fires its bullet.
+	We get an read violation exception bullet down below at "if (it->IsAlive()) {".
+
+	But if I shoot a bullet or two, then program runs normal...
+	*/
 
 	g_Objects[0]->physicsCmp->m_XDirection = GetMouseX();
 	g_Objects[0]->physicsCmp->m_YDirection = GetMouseY();
@@ -364,6 +463,7 @@ void AI::_update(float dt) {
 
 
 	for (auto it : g_Objects) {
+		if(it != nullptr) cout << color(colors::RED) << "Current Object -- " << it->m_ID << white << endl;
 
 		if (it->IsAlive()) {
 			it->Update(dt);
@@ -371,7 +471,7 @@ void AI::_update(float dt) {
 
 			if (it->aiCmp != nullptr) {
 
-				cout << color(colors::DARKMAGENTA) << "AI Ship pos (" << it->physicsCmp->m_XPos << ":" << it->physicsCmp->m_YPos << " )" << white << endl;
+				cout << color(colors::BLUE) << it->m_ID <<" position (" << it->physicsCmp->m_XPos << ":" << it->physicsCmp->m_YPos << " )" << white << endl;
 			}			
 		}
 		else { // Erase elements that are not alive.
@@ -382,7 +482,7 @@ void AI::_update(float dt) {
 				GameObject* s = *iter._Ptr;
 
 				try { // Capsule deletion into try-catch, as it makes sometimes out-of-range errors.
-					cout << color(colors::RED) << "Erased element -- " << s->m_ID << white << endl;
+					cout << color(colors::GREEN) << "Erased element -- " << s->m_ID << white << endl;
 					g_Objects.erase(iter); // Erase found element.
 				}
 				catch (const char* err) {
@@ -451,6 +551,12 @@ void AI::_handleKeyboard() {
 		exit(0);
 	}
 
+	if (GetKey(olc::Key::CTRL).bHeld) {
+		if (GetKey(olc::Key::G).bPressed) {
+			g_bDrawDebugGrid = (g_bDrawDebugGrid == true) ? false : true;
+		}
+	}
+
 	if (GetKey(olc::Key::SPACE).bReleased) {
 
 		for (auto it : g_Objects) {
@@ -478,6 +584,6 @@ void AI::_handleMouse() {
 
 
 		g_Objects.push_back(b);
-		static_cast<Ship*>(g_Objects[0])->m_SlaveBullets.push_back(b); // Save bullet in slave objects.
+		reinterpret_cast<Ship*>(g_Objects[0])->m_SlaveBullets.push_back(b); // Save bullet in slave objects.
 	}
 }

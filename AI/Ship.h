@@ -19,6 +19,8 @@ public:
 
 	~Ship() = default;
 
+	bool IsAlive() override { return m_Alive; }
+
 	void ApplyGravitation(float xdir, float ydir) override {
 
 	}
@@ -126,8 +128,8 @@ public:
 		using namespace std;
 
 		cout << APP_COLOR << "Collision at X::( "<< physicsCmp->m_XPos << " : " << obj->physicsCmp->m_XPos <<" )--Y::( " <<physicsCmp->m_YPos << " : " << obj->physicsCmp->m_YPos <<" )" << white << endl;
-		cout << APP_COLOR << "Of Ships 1::" << this->m_ID << " and 2::" << obj->m_ID << white << endl;
-		cout << APP_COLOR << "Velocity of Ships 1::" << this->physicsCmp->m_Velocity << " and 2::" << obj->physicsCmp->m_Velocity << white << endl;
+		cout << APP_COLOR << "Of Objects 1::" << this->m_ID << " and 2::" << obj->m_ID << white << endl;
+		cout << APP_COLOR << "Velocity of Objects 1::" << this->physicsCmp->m_Velocity << " and 2::" << obj->physicsCmp->m_Velocity << white << endl;
 	}
 
 
@@ -154,7 +156,7 @@ public:
 
 					// Seems to be solved. Check for some time...
 
-
+					/*
 					const std::vector<Bullet*>::iterator i = std::find(m_SlaveBullets.begin(), m_SlaveBullets.end(), it);
 					int index = std::distance(m_SlaveBullets.begin(), i);
 
@@ -162,6 +164,12 @@ public:
 						m_SlaveBullets.erase(m_SlaveBullets.begin() + index);
 						cout << color(colors::RED) << "Erased bullet from -- "<< m_ID << white << endl;
 					}
+					*/
+					std::vector<Bullet*>::iterator i = std::find(m_SlaveBullets.begin(), m_SlaveBullets.end(), it);
+					if (i != m_SlaveBullets.end()) {
+						m_SlaveBullets.erase(i); // Erase found element.
+					}
+
 				}
 			}
 
@@ -182,8 +190,4 @@ public:
 	float m_PreviousYPos;
 
 	std::vector<Bullet*> m_SlaveBullets; // e.g. to non collide with.
-
 };
-
-
-
