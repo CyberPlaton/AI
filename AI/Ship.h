@@ -14,6 +14,9 @@ public:
 		this->physicsCmp = new PhysicsComponent(x, y);
 		physicsCmp->m_Size = 20;
 		physicsCmp->m_IsCollidable = true;
+
+
+		this->healthCmp = new HealthComponent(10);
 	}
 
 
@@ -31,6 +34,9 @@ public:
 
 
 	void Update(float dt) {
+
+		m_Alive = (healthCmp->m_Health <= 0) ? false : true;
+		if (!m_Alive) return;
 
 		int width = 945;
 		int height = 705;
@@ -190,4 +196,6 @@ public:
 	float m_PreviousYPos;
 
 	std::vector<Bullet*> m_SlaveBullets; // e.g. to non collide with.
+
+
 };

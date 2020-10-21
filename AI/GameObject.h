@@ -5,6 +5,17 @@ class GameObject;
 #include"FiniteStateMachine.h"
 #include"Platform.h"
 
+
+struct HealthComponent {
+	HealthComponent(int v) : m_Health(v) {};
+
+	void DecreaseHealth(int v) { m_Health -= v; }
+	void IncreaseHealth(int v) { m_Health += v; }
+
+	int m_Health;
+};
+
+
 struct GraphicsComponent {
 
 	enum GeometryType {
@@ -116,13 +127,7 @@ struct AIComponent {
 		m_State->NewState(newState);
 	}
 
-	void Update() {
-		
-		if (!ExecuteStateLogic()) {
-			std::cout << "COULDNT EXECUTE AI STATELOGIC" << std::endl;
-		}
-	}
-
+	void Update();
 
 	bool ExecuteStateLogic() {
 		switch (m_State->GetState())
@@ -159,7 +164,12 @@ struct AIComponent {
 			return false;
 			break;
 		}
+
+		return true;
 	};
+
+
+	void DetermineStateChange();
 
 	std::map<std::string, fsm::IStateLogic*> m_StateLogicMap;
 	GameObject* m_ManagedObject;
@@ -190,6 +200,7 @@ public:
 	AIComponent* aiCmp = nullptr;
 	PhysicsComponent* physicsCmp = nullptr;
 	GraphicsComponent* graphicsCmp = nullptr;
+	HealthComponent* healthCmp = nullptr;
 
 	bool m_Alive;
 	std::string m_ID; // Every Object has an identifier whether a name or stringified address.
@@ -318,6 +329,7 @@ public:
 	void ResolveCollision(GameObject* obj) override {
 
 		m_Alive = false;
+		obj->healthCmp->DecreaseHealth(5);
 	}
 
 

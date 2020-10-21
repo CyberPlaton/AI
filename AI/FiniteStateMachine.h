@@ -39,10 +39,14 @@ namespace fsm {
 			return m_CurrentState;
 		}
 
+		
 
 	private:
 		fsm::States m_CurrentState = fsm::States::STATE_INVALID;
 
+
 	private:
+
+
 	};
 }
