@@ -5,47 +5,39 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source Files\ai">
+      <UniqueIdentifier>{b37667f8-7377-4406-8543-40dd81586612}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ship.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FiniteStateMachine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GameObject.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Ship.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ColorConsole.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FiniteStateMachine.h">
+    <ClInclude Include="BTNode.h">
+      <Filter>Source Files\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="BTNodes.h">
+      <Filter>Source Files\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="BTBlackboard.h">
+      <Filter>Source Files\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="OLCGameEngineInterface.h">
+    <ClInclude Include="OLCInterface.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Any.h">
+      <Filter>Source Files\ai</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Platform.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </None>
+    </ClCompile>
+    <ClCompile Include="Any.cpp">
+      <Filter>Source Files\ai</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
