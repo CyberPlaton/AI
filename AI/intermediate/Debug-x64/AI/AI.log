@@ -1,6 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(504,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(505,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Any.cpp
   main.cpp
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Any.h(56,35): warning C4101: 'e': unreferenced local variable
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\main.cpp(28): message : see reference to function template instantiation 'T Any::as<int>(void)' being compiled
@@ -8,5 +7,4 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\main.cpp(28): message : see reference
           [
               T=int
           ]
-  Generating Code...
   AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\bin\Debug-x64\AI\AI.exe

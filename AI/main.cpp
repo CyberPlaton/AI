@@ -108,8 +108,15 @@ class BTMovementExpert : public BTExpert
 public:
 	BTMovementExpert(std::string name) : m_Name(name) {}
 
+
 	float insistence(BTBlackboard* bb)
 	{
+		using namespace std;
+
+		cout << color(colors::RED);
+		cout << "\""<< name() << "\"->insistence() = " << 1.0f << white << endl;
+
+
 		return 1.0f;
 	}
 
@@ -121,8 +128,8 @@ public:
 		Any z(0, AnyType::ANY_INT);
 
 		bb->set("location_x", x);
-		bb->set("location_x", x);
-		bb->set("location_x", x);
+		bb->set("location_y", y);
+		bb->set("location_z", z);
 	}
 
 
