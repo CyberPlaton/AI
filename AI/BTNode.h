@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <array>
 
 enum BTNodeResult
 {
@@ -29,7 +30,7 @@ public:
 	virtual BTNode* parent() = 0;
 	virtual void setParent(BTNode*) = 0;
 	virtual BTNode* child(std::string) = 0;
-	virtual std::map<std::string, BTNode*>  children() = 0;
+	virtual std::map<int, BTNode*>  children() = 0;
 	virtual void addChild(BTNode*) = 0;
 	virtual void removeChild(std::string) = 0;
 

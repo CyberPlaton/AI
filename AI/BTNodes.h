@@ -1,6 +1,9 @@
 #pragma once
 
+
 #include "BTNode.h"
+
+
 
 class BTFallback : public BTNode
 {
@@ -13,6 +16,11 @@ public:
 
 	BTNodeResult tick() override
 	{
+		using namespace std;
+		cout << color(colors::MAGENTA);
+		cout << name() << "->tick()" << white << endl;
+
+
 		for (auto& kid : m_Children)
 		{
 			BTNodeResult result = kid.second->tick();
@@ -47,7 +55,7 @@ public:
 	{
 		for (auto& kid : m_Children)
 		{
-			if (strcmp(name.c_str(), kid.first.c_str()) == 0)
+			if (strcmp(name.c_str(), kid.second->name().c_str()) == 0)
 			{
 				return kid.second;
 			}
@@ -56,7 +64,7 @@ public:
 		return nullptr;
 	}
 
-	std::map<std::string, BTNode*>  children() override
+	std::map<int, BTNode*>  children() override
 	{
 		return m_Children;
 	}
@@ -64,7 +72,9 @@ public:
 
 	void addChild(BTNode* node) override
 	{
-		m_Children.try_emplace(node->name(), node);
+		m_Children.try_emplace(m_NextNodeIndex, node);
+
+		m_NextNodeIndex++;
 
 		node->setParent(this);
 	}
@@ -72,13 +82,18 @@ public:
 
 	void removeChild(std::string name) override
 	{
+		int location = 0;
+
 		for (auto& kid : m_Children)
 		{
-			if (strcmp(kid.first.c_str(), name.c_str()) == 0)
+			if (strcmp(kid.second->name().c_str(), name.c_str()) == 0)
 			{
-				m_Children.erase(name);
+				m_Children.erase(location);
+				m_NextNodeIndex--;
 				return;
 			}
+
+			location++;
 		}
 	}
 
@@ -92,8 +107,13 @@ public:
 private:
 
 	BTNode* m_Parent = nullptr;
-	std::map<std::string, BTNode*> m_Children;
 
+	/*
+	* The first number indicates the positional value of the node,
+	* where 0 means this node is executed first and n-1 is the last node.
+	*/
+	std::map<int, BTNode*> m_Children;
+	int m_NextNodeIndex = 0;
 
 	std::string m_Name;
 };
@@ -120,6 +140,13 @@ public:
 
 	BTNodeResult tick() override
 	{
+		using namespace std;
+		cout << color(colors::MAGENTA);
+		cout << name() << "->tick()" << white << endl;
+
+
+
+
 		for (auto& kid : m_Children)
 		{
 			BTNodeResult result = kid.second->tick();
@@ -153,7 +180,7 @@ public:
 	{
 		for (auto& kid : m_Children)
 		{
-			if (strcmp(name.c_str(), kid.first.c_str()) == 0)
+			if (strcmp(name.c_str(), kid.second->name().c_str()) == 0)
 			{
 				return kid.second;
 			}
@@ -163,7 +190,7 @@ public:
 	}
 
 
-	std::map<std::string, BTNode*>  children() override
+	std::map<int, BTNode*>  children() override
 	{
 		return m_Children;
 	}
@@ -171,7 +198,9 @@ public:
 
 	void addChild(BTNode* node) override
 	{
-		m_Children.try_emplace(node->name(), node);
+		m_Children.try_emplace(m_NextNodeIndex, node);
+
+		m_NextNodeIndex++;
 
 		node->setParent(this);
 	}
@@ -179,13 +208,18 @@ public:
 
 	void removeChild(std::string name) override
 	{
+		int location = 0;
+
 		for (auto& kid : m_Children)
 		{
-			if (strcmp(kid.first.c_str(), name.c_str()) == 0)
+			if (strcmp(kid.second->name().c_str(), name.c_str()) == 0)
 			{
-				m_Children.erase(name);
+				m_Children.erase(location);
+				m_NextNodeIndex--;
 				return;
 			}
+
+			location++;
 		}
 	}
 
@@ -199,8 +233,13 @@ private:
 
 
 	BTNode* m_Parent = nullptr;
-	std::map<std::string, BTNode*>  m_Children;
 
+	/*
+	* The first number indicates the positional value of the node,
+	* where 0 means this node is executed first and n-1 is the last node.
+	*/
+	std::map<int, BTNode*> m_Children;
+	int m_NextNodeIndex = 0;
 
 	std::string m_Name;
 };
@@ -264,9 +303,9 @@ public:
 	}
 
 
-	std::map<std::string, BTNode*> children() override
+	std::map<int, BTNode*> children() override
 	{
-		std::map<std::string, BTNode*> v;
+		std::map<int, BTNode*> v;
 		return v;
 	}
 
@@ -355,9 +394,9 @@ public:
 	}
 
 
-	std::map<std::string, BTNode*>  children() override
+	std::map<int, BTNode*>  children() override
 	{
-		std::map<std::string, BTNode*> v;
+		std::map<int, BTNode*> v;
 		return v;
 	}
 
@@ -426,12 +465,12 @@ public:
 	}
 
 
-	std::map<std::string, BTNode*>  children() override
+	std::map<int, BTNode*>  children() override
 	{
-		std::map<std::string, BTNode*> v;
+		std::map<int, BTNode*> v;
 		if(m_Child)
 		{
-			v.emplace(m_Child->name(), m_Child);
+			v.emplace(0, m_Child);
 		}
 
 		return v;
