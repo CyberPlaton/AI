@@ -8,6 +8,9 @@
     <Filter Include="Source Files\ai">
       <UniqueIdentifier>{b37667f8-7377-4406-8543-40dd81586612}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\testing">
+      <UniqueIdentifier>{8807b397-644e-4b1c-bd49-8e6e6498d0b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorConsole.h">
@@ -23,6 +26,12 @@
       <Filter>Source Files\ai</Filter>
     </ClInclude>
     <ClInclude Include="Any.h">
+      <Filter>Source Files\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="test_suite_alpha_one.h">
+      <Filter>Source Files\testing</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTree.h">
       <Filter>Source Files\ai</Filter>
     </ClInclude>
   </ItemGroup>

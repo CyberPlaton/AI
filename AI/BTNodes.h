@@ -430,10 +430,6 @@ private:
 
 
 
-
-
-
-
 class BTDecorator : public BTNode
 {
 public:
@@ -508,6 +504,270 @@ private:
 
 	BTNode* m_Parent = nullptr;
 	BTNode* m_Child = nullptr;
+
+	std::string m_Name;
+};
+
+
+
+
+
+
+
+class BTInverter : public BTDecorator
+{
+public:
+
+	BTInverter(std::string name) : BTDecorator(name)
+	{
+
+	}
+
+
+	BTNodeResult tick() override final
+	{
+		BTNodeResult result = m_Child->tick();
+
+		if (result == BTNodeResult::SUCCESS)
+		{
+			return FAILURE;
+		}
+		else
+		{
+			return SUCCESS;
+		}
+	}
+
+
+	BTNode* parent() override
+	{
+		return m_Parent;
+	}
+
+
+	void setParent(BTNode* node) override
+	{
+		m_Parent = node;
+	}
+
+
+	BTNode* child(std::string) override
+	{
+		return m_Child;
+	}
+
+
+	std::map<int, BTNode*>  children() override
+	{
+		std::map<int, BTNode*> v;
+		if (m_Child)
+		{
+			v.emplace(0, m_Child);
+		}
+
+		return v;
+	}
+
+
+	void addChild(BTNode* node) override
+	{
+		if (!m_Child)
+		{
+			m_Child = node;
+
+			node->setParent(this);
+		}
+	}
+
+
+	void removeChild(std::string) override
+	{
+		if (m_Child)
+		{
+			delete m_Child;
+			m_Child = nullptr;
+		}
+	}
+
+	std::string name() override
+	{
+		return m_Name;
+	}
+
+
+private:
+
+
+	BTNode* m_Parent = nullptr;
+	BTNode* m_Child = nullptr;
+
+	std::string m_Name;
+};
+
+
+
+
+
+
+
+class BTParallel : public BTNode
+{
+public:
+
+	enum Policy
+	{
+		Invalid = 0,
+		Require_All = 1,
+		Require_One = 2
+	};
+
+
+public:
+
+	BTParallel(std::string name, Policy success, Policy fail) : m_Name(name), m_FailPolicy(fail), m_SuccessPolicy(success)
+	{
+
+	}
+
+	BTNodeResult tick() override
+	{
+		using namespace std;
+		cout << color(colors::MAGENTA);
+		cout << name() << "->tick()" << white << endl;
+
+		if (m_FailPolicy == Policy::Invalid) return INVALID;
+		if (m_SuccessPolicy == Policy::Invalid) return INVALID;
+
+		int successful_ticks = 0, failed_ticks = 0;
+
+
+		for (auto& kid : m_Children)
+		{
+
+			BTNodeResult result = kid.second->tick();
+
+			if (result == SUCCESS)
+			{
+				successful_ticks++;
+
+				if (m_SuccessPolicy == Require_One)
+				{
+					return SUCCESS;
+				}
+			}
+			else if (result == FAILURE)
+			{
+				failed_ticks++;
+
+				if (m_FailPolicy == Require_One)
+				{
+					return SUCCESS;
+				}
+			}
+			else
+			{
+				return INVALID;
+			}
+		}
+
+
+
+		if (m_SuccessPolicy == Require_All &&
+			successful_ticks == m_Children.size())
+		{
+			return SUCCESS;
+		}
+
+		if (m_FailPolicy == Require_All &&
+			failed_ticks == m_Children.size())
+		{
+			return FAILURE;
+		}
+
+
+		// Should never reach.
+		return INVALID;
+	}
+
+
+	BTNode* parent() override
+	{
+		return m_Parent;
+	}
+
+	void setParent(BTNode* node) override
+	{
+		m_Parent = node;
+	}
+
+
+	BTNode* child(std::string name) override
+	{
+		for (auto& kid : m_Children)
+		{
+			if (strcmp(name.c_str(), kid.second->name().c_str()) == 0)
+			{
+				return kid.second;
+			}
+		}
+
+		return nullptr;
+	}
+
+
+	std::map<int, BTNode*>  children() override
+	{
+		return m_Children;
+	}
+
+
+	void addChild(BTNode* node) override
+	{
+		m_Children.try_emplace(m_NextNodeIndex, node);
+
+		m_NextNodeIndex++;
+
+		node->setParent(this);
+	}
+
+
+	void removeChild(std::string name) override
+	{
+		int location = 0;
+
+		for (auto& kid : m_Children)
+		{
+			if (strcmp(kid.second->name().c_str(), name.c_str()) == 0)
+			{
+				m_Children.erase(location);
+				m_NextNodeIndex--;
+				return;
+			}
+
+			location++;
+		}
+	}
+
+	std::string name() override
+	{
+		return m_Name;
+	}
+
+
+private:
+
+	Policy m_FailPolicy = Policy::Invalid;
+	Policy m_SuccessPolicy = Policy::Invalid;
+
+
+	BTNode* m_Parent = nullptr;
+
+	/*
+	* The first number indicates the positional value of the node,
+	* where 0 means this node is executed first and n-1 is the last node.
+	*/
+	std::map<int, BTNode*> m_Children;
+	int m_NextNodeIndex = 0;
 
 	std::string m_Name;
 };
