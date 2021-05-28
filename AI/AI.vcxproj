@@ -91,12 +91,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Any.h" />
-    <ClInclude Include="App.h" />
     <ClInclude Include="BTBlackboard.h" />
     <ClInclude Include="BTNode.h" />
     <ClInclude Include="BTNodes.h" />
     <ClInclude Include="ColorConsole.h" />
-    <ClInclude Include="OLCInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Any.cpp" />

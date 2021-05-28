@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -19,11 +20,9 @@ std::cout << color(colors::DARKMAGENTA);
 std::cout << "This is written in darkmagenta." << "\n"; 
 */
 
-
 #define APP_COLOR  color(FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY)
 #define APP_SUCCESS_COLOR  color(FOREGROUND_GREEN | FOREGROUND_INTENSITY)
 #define APP_ERROR_COLOR  color(FOREGROUND_RED | FOREGROUND_INTENSITY)
-
 
 namespace colors {
     enum {
@@ -100,4 +99,3 @@ operator<<(std::basic_ostream<_Elem, _Traits>& i, const color& c)
     SetConsoleTextAttribute(hStdout, c.m_color);
     return i;
 }
-

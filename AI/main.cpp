@@ -3,8 +3,6 @@
 #include "BTBlackboard.h"
 #include "Any.h"
 
-#include "App.h"
-
 #include <random>
 #include <thread>
 #include <conio.h>
@@ -145,9 +143,18 @@ private:
 
 
 
-bool App::OnUserCreate()
+int main()
 {
+	using namespace std;
 
+	std::vector<BTNode*> m_Nodes;
+	std::vector<BTBlackboard*> m_BBs;
+	std::vector<BTExpert*> m_Experts;
+
+
+	/*
+	* Initialize Stuff.
+	*/
 	BTBlackboard* blackboard = new BTBlackboard("BB");
 	BTMovementExpert* expert = new BTMovementExpert("MExpert");
 
@@ -180,53 +187,37 @@ bool App::OnUserCreate()
 
 	m_Nodes.push_back(fallback);
 
-	return true;
-}
 
-
-bool App::OnUserUpdate(float fElapsedTime)
-{
-	using namespace std;
-
-
-	for (auto& node : m_Nodes)
-	{
-		node->tick();
-	}
-
-
-	for (auto& bb : m_BBs)
+	/*
+	* Main Loop.
+	*/
+	while (true)
 	{
 
-		int x = bb->data()["location_x"].as<int>();
-		int y = bb->data()["location_y"].as<int>();
-		int z = bb->data()["location_z"].as<int>();
+		for (auto& node : m_Nodes)
+		{
+			node->tick();
+		}
 
-		cout << color(colors::YELLOW);
-		cout << "X " << x << endl;
-		cout << "Y " << y << endl;
-		cout << "Z " << z << white << endl;
+		for (auto& bb : m_BBs)
+		{
 
+			int x = bb->data()["location_x"].as<int>();
+			int y = bb->data()["location_y"].as<int>();
+			int z = bb->data()["location_z"].as<int>();
 
-		bb->iterate(m_Experts);
-	}
-
-
-	std::this_thread::sleep_for(16ms);
-	system("cls");
-
-	return true;
-}
+			cout << color(colors::YELLOW);
+			cout << "X " << x << endl;
+			cout << "Y " << y << endl;
+			cout << "Z " << z << white << endl;
 
 
-int main()
-{
+			bb->iterate(m_Experts);
+		}
 
 
-	App app;
-	if (app.Construct(600, 480, 1, 1))
-	{
-		app.Start();
+		std::this_thread::sleep_for(16ms);
+		system("cls");
 	}
 
 	return 0;

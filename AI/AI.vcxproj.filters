@@ -22,12 +22,6 @@
     <ClInclude Include="BTBlackboard.h">
       <Filter>Source Files\ai</Filter>
     </ClInclude>
-    <ClInclude Include="App.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OLCInterface.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Any.h">
       <Filter>Source Files\ai</Filter>
     </ClInclude>
