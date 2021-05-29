@@ -16,8 +16,9 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Timer.h(60,10): warning C4244: 'retur
           [
               _Rep=__int64
           ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\BTNodes.h(277,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Any.h(56,35): warning C4101: 'e': unreferenced local variable
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\test_suite_alpha_one.h(65): message : see reference to function template instantiation 'T Any::as<int>(void)' being compiled
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\test_suite_alpha_one.h(67): message : see reference to function template instantiation 'T Any::as<int>(void)' being compiled
           with
           [
               T=int

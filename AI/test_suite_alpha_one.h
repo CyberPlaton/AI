@@ -4,6 +4,8 @@
 
 #include <random>
 #include <thread>
+#include <chrono>
+
 
 
 int agent_location[3] = { -200, 221, -1200 };
@@ -612,6 +614,83 @@ bool test_suite_alpha_two()
 		std::this_thread::sleep_for(16ms);
 		system("cls");
 	}
+
+	return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class PrintToConsole : public BTAction
+{
+public:
+	PrintToConsole(std::string name, std::string message) : BTAction(name), m_Message(message) {}
+
+
+	BTNodeResult command() override final
+	{
+		using namespace std;
+
+		cout << color(colors::GREEN) << endl;
+		cout << "\"" << name() << "\"->command() = SUCCESS -- \"" << m_Message << "\"" << white << endl;
+
+		return BTNodeResult::SUCCESS;
+	}
+
+	std::string m_Message;
+};
+
+
+
+bool test_suite_alpha_three()
+{
+	using namespace std;
+
+	BehaviorTree* tree = new BehaviorTree("Behavior Tree");
+
+	BTSequence* root = new BTSequence("Root Sequence");
+
+	PrintToConsole* print = new PrintToConsole("Print Node", "Heavy Computation...");
+	PrintToConsole* print2 = new PrintToConsole("Second Print Node", "Executing AI...");
+	PrintToConsole* print3 = new PrintToConsole("Third Print Node", "Executing Graphics...");
+	PrintToConsole* print4 = new PrintToConsole("Fourth Print Node", "Sending Inputs...");
+
+	BTRandomSequence* seq = new BTRandomSequence("Random Sequence");
+	BTTimer* timer = new BTTimer("Timer", BTTimer::Granularity::Seconds, BTTimer::Policy::Greater, 5.0);
+
+	root->addChild(seq);
+
+	seq->addChild(timer);
+	seq->addChild(print);
+	seq->addChild(print2);
+	seq->addChild(print3);
+	seq->addChild(print4);
+
+
+	tree->setRoot(root);
+
+
+	int count = 0;
+	while (true)
+	{
+		tree->update();
+
+
+		std::this_thread::sleep_for(16ms);
+		system("cls");
+		count++;
+
+		if (count > 100) return true;
+	}
+
 
 	return false;
 }
