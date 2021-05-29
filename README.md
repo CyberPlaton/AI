@@ -10,3 +10,6 @@ Exploring Artificial Intelligence based.
 
 ## Tested Behavior Tree 2)
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/BT_0.2.png)
+
+## Tested Behavior Tree 3)
+![alt text](https://github.com/CyberPlaton/AI/blob/master/BT_0.3.png)
