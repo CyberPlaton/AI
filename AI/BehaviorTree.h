@@ -28,4 +28,5 @@ private:
 	BTNode* m_Root = nullptr;
 
 	std::string m_Name;
+
 };

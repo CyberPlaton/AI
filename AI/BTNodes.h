@@ -2,6 +2,7 @@
 
 
 #include "BTNode.h"
+#include "Timer.h"
 
 
 
@@ -429,6 +430,178 @@ private:
 
 
 
+class BTTimer : public BTCondition
+{
+public:
+	enum class Policy
+	{
+		Invalid = -1,
+		Smaller = 0,
+		Greater = 1
+	};
+
+	enum class Granularity
+	{
+		Invalid = -1,
+		Seconds = 0,
+		Milliseconds = 1,
+		Microseconds = 2
+	};
+public:
+
+	/*
+	* The first timer test will be unsuccessful, as creation time and first tick time are
+	* probably with a huge difference.
+	* 
+	* Thus the working will normalize with first several tree ticks.
+	*/
+	BTTimer(std::string name, Granularity g, Policy p, double condition) : BTCondition(name), m_Policy(p), m_Condition(condition), m_Granularity(g) { m_Timer.startTimer(); }
+
+
+	BTNodeResult checkCondition() override final
+	{
+		using namespace std;
+
+		if (m_Policy == Policy::Invalid) return BTNodeResult::INVALID;
+
+
+		double dt = m_Timer.getElapsedSeconds();
+		double dtms = m_Timer.getElapsedMilliseconds();
+		double dtus = m_Timer.getElapsedMicroseconds();
+
+		cout << color(colors::WHITE) << endl;
+		cout << name() << " elapsedTime = "<< dt << "s,    " << dtms << "ms,    " << dtus << "us" << white << endl;
+
+
+		// Do timer checks based on the required granularity of time.
+		switch (m_Granularity)
+		{
+		case Granularity::Seconds:
+			if (m_Policy == Policy::Smaller)
+			{
+
+				if (dt <= m_Condition)
+				{
+					m_Timer.startTimer();
+
+
+					cout << color(colors::GREEN) << endl;
+					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
+
+
+					return BTNodeResult::SUCCESS;
+				}
+			}
+			else
+			{
+				if (dt >= m_Condition)
+				{
+					m_Timer.startTimer();
+
+
+					cout << color(colors::GREEN) << endl;
+					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
+
+
+					return BTNodeResult::SUCCESS;
+				}
+			}
+			break;
+
+
+
+
+
+		case Granularity::Milliseconds:
+			if (m_Policy == Policy::Smaller)
+			{
+
+				if (dtms <= m_Condition)
+				{
+					m_Timer.startTimer();
+
+
+					cout << color(colors::GREEN) << endl;
+					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
+
+
+					return BTNodeResult::SUCCESS;
+				}
+			}
+			else
+			{
+				if (dtms >= m_Condition)
+				{
+					m_Timer.startTimer();
+
+
+					cout << color(colors::GREEN) << endl;
+					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
+
+
+					return BTNodeResult::SUCCESS;
+				}
+			}
+			break;
+
+
+
+
+		case Granularity::Microseconds:
+			if (m_Policy == Policy::Smaller)
+			{
+
+				if (dtus <= m_Condition)
+				{
+					m_Timer.startTimer();
+
+
+					cout << color(colors::GREEN) << endl;
+					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
+
+
+					return BTNodeResult::SUCCESS;
+				}
+			}
+			else
+			{
+				if (dtus >= m_Condition)
+				{
+					m_Timer.startTimer();
+
+
+					cout << color(colors::GREEN) << endl;
+					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
+
+
+					return BTNodeResult::SUCCESS;
+				}
+			}
+			break;
+		}
+
+
+
+
+		cout << color(colors::RED) << endl;
+		cout << "\"" << name() << "\"->checkCondition() = FAILURE" << white << endl;
+
+		m_Timer.startTimer();
+		return BTNodeResult::FAILURE;
+	}
+
+
+private:
+
+	Timer m_Timer;
+	Policy m_Policy = Policy::Invalid;
+	Granularity m_Granularity = Granularity::Invalid;
+	double m_Condition = 0.0;
+};
+
+
+
+
 
 class BTDecorator : public BTNode
 {
@@ -771,3 +944,6 @@ private:
 
 	std::string m_Name;
 };
+
+
+

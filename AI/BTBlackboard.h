@@ -5,6 +5,7 @@
 
 #include <list>
 #include <map>
+#include <mutex>
 
 class BTBlackboard;
 
@@ -51,17 +52,37 @@ public:
 
 	}
 
-
+	
 	void set(std::string name, Any value)
 	{
+		std::scoped_lock lock(m_Mutex);
+
 		m_Data[name].setData(value.data());
 	}
 
-
+	
+	/*
+	* Function should not be used.
+	* An will be not available later.
+	* 
+	* For now we let it be for tests sake...
+	*/
 	std::map<std::string, Any>& data()
 	{
 		return m_Data;
 	}
+
+
+
+	template < typename Type >
+	Type& getData(std::string name)
+	{
+		std::scoped_lock lock(m_Mutex);
+
+		return m_Data[name].as< Type >();
+	}
+
+
 
 
 	std::list<BTAction*> actions()
@@ -76,4 +97,6 @@ private:
 	std::map<std::string, Any> m_Data;
 
 	std::list<BTAction*> m_PassedActions;
+
+	std::mutex m_Mutex;
 };

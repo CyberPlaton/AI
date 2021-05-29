@@ -34,6 +34,9 @@
     <ClInclude Include="BehaviorTree.h">
       <Filter>Source Files\ai</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
