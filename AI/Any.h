@@ -8,7 +8,6 @@
 #define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility. Comparing strings.
 #define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility. Comparing strings.
 
-#pragma region any
 enum AnyType {
 	ANY_INT,
 	ANY_DOUBLE,
@@ -27,6 +26,14 @@ public:
 	bool operator==(const Any& rhs) { return this->_equal(rhs.m_Value); }
 	bool operator<(const Any& rhs) { return this->_smaller(rhs.m_Value); }
 	bool operator>(const Any& rhs) { return this->_greater(rhs.m_Value); }
+	
+	Any& operator=(const Any&rhs)
+	{
+		Any a;
+		a.m_Type = rhs.m_Type;
+		a.m_Value = rhs.m_Value;
+		return a;
+	}
 
 
 

@@ -46,4 +46,9 @@
       <Filter>Source Files\ai</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="BehaviorTree.json">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
