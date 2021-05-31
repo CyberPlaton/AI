@@ -16,16 +16,10 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Timer.h(60,10): warning C4244: 'retur
           [
               _Rep=__int64
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\BTNodes.h(277,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Any.h(56,35): warning C4101: 'e': unreferenced local variable
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\test_suite_alpha_one.h(67): message : see reference to function template instantiation 'T Any::as<int>(void)' being compiled
-          with
-          [
-              T=int
-          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\BTNodes.h(285,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Generating code
-  1 of 20 functions ( 5.0%) were compiled, the rest were copied from previous compilation.
+  5 of 1157 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    24 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\bin\Release-x64\AI\AI.exe

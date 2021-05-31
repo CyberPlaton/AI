@@ -11,6 +11,9 @@
     <Filter Include="Source Files\testing">
       <UniqueIdentifier>{8807b397-644e-4b1c-bd49-8e6e6498d0b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\threading">
+      <UniqueIdentifier>{3b7361f8-9c27-4a49-a9f0-b61db0732721}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorConsole.h">
@@ -36,6 +39,18 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntType.h">
+      <Filter>Source Files\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="VGJS.h">
+      <Filter>Source Files\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="VGJSCoro.h">
+      <Filter>Source Files\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="AIEngine.h">
+      <Filter>Source Files\ai</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

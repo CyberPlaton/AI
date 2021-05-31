@@ -20,9 +20,12 @@ public:
 
 	BTNodeResult tick() override
 	{
+#ifdef _DEBUG_OUT
 		using namespace std;
 		cout << color(colors::MAGENTA);
 		cout << name() << "->tick()" << white << endl;
+#endif
+
 
 
 		for (auto& kid : m_Children)
@@ -144,10 +147,12 @@ public:
 
 	BTNodeResult tick() override
 	{
+#ifdef _DEBUG_OUT
+
 		using namespace std;
 		cout << color(colors::MAGENTA);
 		cout << name() << "->tick()" << white << endl;
-
+#endif
 
 
 
@@ -261,9 +266,12 @@ public:
 
 	BTNodeResult tick() override
 	{
+#ifdef _DEBUG_OUT
+
 		using namespace std;
 		cout << color(colors::MAGENTA);
 		cout << name() << "->tick()" << white << endl;
+#endif
 
 		// Randomize the children execution sequence.
 		std::vector<BTNode*> shuffled_kids;
@@ -400,9 +408,11 @@ public:
 
 	virtual BTNodeResult command()
 	{
+#ifdef _DEBUG_OUT
 		using namespace std;
 		cout << color(colors::RED) << endl;
 		cout << "\"" << m_Name << "\"->command() = Invalid" << white << endl;
+#endif
 
 		return INVALID;
 	}
@@ -486,9 +496,11 @@ public:
 
 	virtual BTNodeResult checkCondition()
 	{
+#ifdef _DEBUG_OUT
 		using namespace std;
 		cout << color(colors::RED) << endl;
 		cout << "\""<< m_Name << "\"->checkCondition() = Invalid" << white << endl;
+#endif
 
 		return INVALID;
 	}
@@ -598,9 +610,10 @@ public:
 		double dtms = m_Timer.getElapsedMilliseconds();
 		double dtus = m_Timer.getElapsedMicroseconds();
 
+#ifdef _DEBUG_OUT
 		cout << color(colors::WHITE) << endl;
 		cout << name() << " elapsedTime = "<< dt << "s,    " << dtms << "ms,    " << dtus << "us" << white << endl;
-
+#endif
 
 		// Do timer checks based on the required granularity of time.
 		switch (m_Granularity)
@@ -613,10 +626,10 @@ public:
 				{
 					m_Timer.startTimer();
 
-
+#ifdef _DEBUG_OUT
 					cout << color(colors::GREEN) << endl;
 					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
-
+#endif
 
 					return BTNodeResult::SUCCESS;
 				}
@@ -627,10 +640,10 @@ public:
 				{
 					m_Timer.startTimer();
 
-
+#ifdef _DEBUG_OUT
 					cout << color(colors::GREEN) << endl;
 					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
-
+#endif
 
 					return BTNodeResult::SUCCESS;
 				}
@@ -650,9 +663,10 @@ public:
 					m_Timer.startTimer();
 
 
+#ifdef _DEBUG_OUT
 					cout << color(colors::GREEN) << endl;
 					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
-
+#endif
 
 					return BTNodeResult::SUCCESS;
 				}
@@ -663,10 +677,10 @@ public:
 				{
 					m_Timer.startTimer();
 
-
+#ifdef _DEBUG_OUT
 					cout << color(colors::GREEN) << endl;
 					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
-
+#endif
 
 					return BTNodeResult::SUCCESS;
 				}
@@ -685,9 +699,10 @@ public:
 					m_Timer.startTimer();
 
 
+#ifdef _DEBUG_OUT
 					cout << color(colors::GREEN) << endl;
 					cout << "\"" << name() << "\"->checkCondition() = SUCCESS" << white << endl;
-
+#endif
 
 					return BTNodeResult::SUCCESS;
 				}
@@ -711,9 +726,10 @@ public:
 
 
 
-
+#ifdef _DEBUG_OUT
 		cout << color(colors::RED) << endl;
 		cout << "\"" << name() << "\"->checkCondition() = FAILURE" << white << endl;
+#endif
 
 		if (m_Policy == Policy::Smaller)
 		{
@@ -937,9 +953,11 @@ public:
 
 	BTNodeResult tick() override
 	{
+#ifdef _DEBUG_OUT
 		using namespace std;
 		cout << color(colors::MAGENTA);
 		cout << name() << "->tick()" << white << endl;
+#endif
 
 		if (m_FailPolicy == Policy::Invalid) return INVALID;
 		if (m_SuccessPolicy == Policy::Invalid) return INVALID;

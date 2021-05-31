@@ -61,7 +61,7 @@
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +79,7 @@
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,14 +90,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AIEngine.h" />
     <ClInclude Include="Any.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="BTBlackboard.h" />
     <ClInclude Include="BTNode.h" />
     <ClInclude Include="BTNodes.h" />
     <ClInclude Include="ColorConsole.h" />
+    <ClInclude Include="IntType.h" />
     <ClInclude Include="test_suite_alpha_one.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="VGJS.h" />
+    <ClInclude Include="VGJSCoro.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Any.cpp" />

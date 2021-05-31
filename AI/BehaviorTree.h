@@ -23,7 +23,7 @@ public:
 	}
 
 
-private:
+public:
 
 	BTNode* m_Root = nullptr;
 
