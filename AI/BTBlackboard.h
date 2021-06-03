@@ -75,7 +75,7 @@ public:
 
 
 	template < typename Type >
-	Type& getData(std::string name)
+	Type getData(std::string name)
 	{
 		std::scoped_lock lock(m_Mutex);
 

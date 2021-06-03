@@ -1,6 +1,7 @@
 #include"Any.h"
 
 
+
 bool Any::_equal(std::any data) {
 
 	if (strcmp(m_Value.type().name(), data.type().name()) == 0) {

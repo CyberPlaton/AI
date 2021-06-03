@@ -1,6 +1,5 @@
 #pragma once
 
-#define _DEBUG_OUT
 #include "BehaviorTree.h"
 #include "VGJS.h"
 

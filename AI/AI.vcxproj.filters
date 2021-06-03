@@ -46,9 +46,6 @@
     <ClInclude Include="VGJS.h">
       <Filter>Source Files\threading</Filter>
     </ClInclude>
-    <ClInclude Include="VGJSCoro.h">
-      <Filter>Source Files\threading</Filter>
-    </ClInclude>
     <ClInclude Include="AIEngine.h">
       <Filter>Source Files\ai</Filter>
     </ClInclude>

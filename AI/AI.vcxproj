@@ -101,7 +101,6 @@
     <ClInclude Include="test_suite_alpha_one.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VGJS.h" />
-    <ClInclude Include="VGJSCoro.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Any.cpp" />
