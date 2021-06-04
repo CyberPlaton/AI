@@ -1,4 +1,6 @@
 
+
+#define _DEBUG_OUT
 #include <conio.h>
 #include "AIEngine.h"
 #include "Timer.h"

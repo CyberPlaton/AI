@@ -18,9 +18,21 @@ public:
 
 	void update()
 	{
+		using namespace std;
+
 		for (auto& tree : m_Trees)
 		{
+#ifdef _DEBUG_OUT
+
+			cout << color(colors::YELLOW);
+			cout << "Behavior Tree Update: \"" << tree->m_Name << "\"" << white << endl;
+
+			tree->update();
+#else
+
 			jSystem.schedule([&]() { tree->update(); });
+#endif
+
 		}
 	}
 
