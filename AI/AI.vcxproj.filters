@@ -49,6 +49,15 @@
     <ClInclude Include="AIEngine.h">
       <Filter>Source Files\ai</Filter>
     </ClInclude>
+    <ClInclude Include="BTFactory.h">
+      <Filter>Source Files\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBinding.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="Any.cpp">
       <Filter>Source Files\ai</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaBinding.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

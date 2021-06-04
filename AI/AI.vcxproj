@@ -47,11 +47,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\AI\bin\$(Configuration)-$(Platform)\$(TargetName)</OutDir>
     <IntDir>$(SolutionDir)\AI\intermediate\$(Configuration)-$(Platform)\$(TargetName)</IntDir>
+    <IncludePath>C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\LuaBridge;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\AI\bin\$(Configuration)-$(Platform)\$(TargetName)</OutDir>
     <IntDir>$(SolutionDir)\AI\intermediate\$(Configuration)-$(Platform)\$(TargetName)</IntDir>
+    <IncludePath>C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\LuaBridge;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -60,13 +62,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\LuaBridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\LuaBridge;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,7 +81,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\LuaBridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -87,6 +90,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\LuaBridge;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -94,16 +98,20 @@
     <ClInclude Include="Any.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="BTBlackboard.h" />
+    <ClInclude Include="BTFactory.h" />
     <ClInclude Include="BTNode.h" />
     <ClInclude Include="BTNodes.h" />
     <ClInclude Include="ColorConsole.h" />
     <ClInclude Include="IntType.h" />
+    <ClInclude Include="LuaBinding.h" />
+    <ClInclude Include="Script.h" />
     <ClInclude Include="test_suite_alpha_one.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VGJS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Any.cpp" />
+    <ClCompile Include="LuaBinding.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

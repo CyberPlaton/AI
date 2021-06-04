@@ -1,5 +1,4 @@
 
-#define _DEBUG_OUT
 #include <conio.h>
 #include "AIEngine.h"
 #include "Timer.h"
@@ -150,13 +149,6 @@ public:
 #endif
 
 
-		std::string entry;
-
-		double t = m_Timer->getElapsedMilliseconds();
-		entry = "mem_" + std::to_string(t);
-		
-
-		m_Blackboard->set(entry, Any(t, AnyType::ANY_DOUBLE));
 
 		return BTNodeResult::SUCCESS;
 	}
@@ -166,45 +158,69 @@ public:
 };
 
 
+class BTComplexNode : public BTAction
+{
+public:
+	BTComplexNode(std::string name, BTBlackboard* b, BTNode* p, double d, Any other) : BTAction(name) { }
+
+
+	BTNodeResult command() override final
+	{
+
+#ifdef _DEBUG_OUT
+
+		using namespace std;
+		cout << color(colors::MAGENTA);
+		cout << name() << "->command()" << white << endl;
+#endif
+		return BTNodeResult::SUCCESS;
+	}
+};
+
+
+#include "BTFactory.h"
+
 
 int main()
 {
+
 	using namespace std;
 	AIEngine aiEngine;
 	Timer timer;
 
-	BTBlackboard* bb1 = new BTBlackboard("Memory of George");
-
-	BehaviorTree* tree = new BehaviorTree("Behavior Tree");
-
-	BTSequence* seq = new BTSequence("Normal Sequence");
-	BTFallback* fb = new BTFallback("Fallback");
-	BTTimer* tim = new BTTimer("Timer", BTTimer::Granularity::Seconds, BTTimer::Policy::Greater, 5.0);
-	BTMemorize* mem = new BTMemorize("Memory", bb1); // Initialy zero, will be set on each iteration with new blackboard representing another entity...
-
-	BTWalkToDestination* walk = new BTWalkToDestination("Walking", bb1);
-	BTSetDestination* setDest = new BTSetDestination("Set Destination", bb1);
+	/*
+	* Start up lua and its binding LuaBridge.
+	*/
+	LuaBinding::get()->getLua();
 
 
-	fb->addChild(seq);
-	fb->addChild(walk);
-	seq->addChild(tim);
-	seq->addChild(setDest);
-	seq->addChild(mem);
+	/*
+	* How to build a tree with the factory.
+	*/
+	BTFactory factory("Test Tree");
+	BehaviorTree* new_tree = factory.add<BTSequence>("Root Sequence")
+										.add<BTTimer>("Timer", (int)BTTimer::Granularity::Milliseconds, (int)BTTimer::Policy::Greater, 100.0)
+										.end()
+									.add<BTMemorize>("Memorizer", new BTBlackboard("Memory"))
+								.build();
+
+	new_tree->update();
+
+	/*
+	* Building a tree at runtimer could be done through exposing the BTFactory functions to lua
+	* and writing a script, which in turn defines the Tree in itself.
+	* 
+	* Reading the script would be just like the execution of above factory functions,
+	* resulting in a working tree.
+	* 
+	* 
+	* Reading Tree from file...
+	*/
+	BehaviorTree* new_lua_tree = factory.readFromFile("lua_tree.lua");
 
 
-	tree->setRoot(fb);
-	aiEngine.addBT(tree);
-
-	// Define initial position of entity and no dest.
-	bb1->set("location_x", Any(0, AnyType::ANY_INT));
-	bb1->set("location_y", Any(0, AnyType::ANY_INT));
-	bb1->set("location_z", Any(0, AnyType::ANY_INT));
-	bb1->set("destination_x", Any(0, AnyType::ANY_INT));
-	bb1->set("destination_y", Any(0, AnyType::ANY_INT));
-	bb1->set("destination_z", Any(0, AnyType::ANY_INT));
-
-
+	aiEngine.addBT(new_lua_tree);
+	aiEngine.addBT(new_tree);
 
 
 	timer.startTimer();
@@ -212,11 +228,10 @@ int main()
 	{
 		timer.startTimer();
 		
-		// First entity update.
-		mem->m_Blackboard = bb1;
-		tree->update();
+		aiEngine.update();
 
-
+		cout << endl;
+		cout << endl;
 		cout << "Update took: " << timer.getElapsedMilliseconds() << "ms" << endl;
 
 		if (_kbhit()) break;
@@ -224,85 +239,5 @@ int main()
 		system("cls");
 	}
 
-
-	cout << "Memory of George: " << endl;
-	for (auto& it : bb1->data())
-	{
-		double n = it.second.as<double>();
-
-		cout << color(colors::CYAN);
-		cout << it.first << " : " << n << white << endl;
-	}
-
-
 	return 0;
 }
-
-
-/*
-int main()
-{
-	using namespace vgjs;
-	using namespace std;
-	AIEngine aiEngine;
-	JobSystem jSystem;
-
-
-	BehaviorTree* tree = new BehaviorTree("Behavior Tree");
-	BehaviorTree* second_tree = new BehaviorTree("Second Behavior Tree");
-
-
-	BTRandomSequence* random = new BTRandomSequence("Random Sequence");
-	BTParallel* parallel = new BTParallel("Parallel", BTParallel::Require_All, BTParallel::Require_One);
-	BTTimer* timer = new BTTimer("Timer", BTTimer::Granularity::Seconds, BTTimer::Policy::Greater, 3.0);
-	PrintToConsole* print = new PrintToConsole("Print Node", "Hello World");
-	PrintToConsole* print_2 = new PrintToConsole("Print Node 2", "Half Life is deprecated");
-	PrintToConsole* print_3 = new PrintToConsole("Print Node 3", "Long Live Unreal");
-
-	BTSequence* seq = new BTSequence("Normal Sequence");
-	BTFallback* fb = new BTFallback("Fallback");
-	BTFallback* fb2 = new BTFallback("Second Fallback");
-	BTTimer* timer2 = new BTTimer("Timer", BTTimer::Granularity::Milliseconds, BTTimer::Policy::Smaller, 100.0);
-	PrintToConsole* print3 = new PrintToConsole("Some Debug Print Node", "ZZZzzzZZZzzz");
-	PrintToConsole* print4 = new PrintToConsole("Fourth Print", "Four");
-	PrintToConsole* print5 = new PrintToConsole("Fifth Print", "Five");
-
-
-	// First tree
-	random->addChild(timer);
-	random->addChild(parallel);
-	timer->addChild(print);
-	parallel->addChild(print_2);
-	parallel->addChild(print_3);
-
-	tree->setRoot(random);
-
-	// Second tree
-	seq->addChild(fb);
-	seq->addChild(fb2);
-	fb->addChild(timer2);
-	timer2->addChild(print3);
-	fb2->addChild(print4);
-	fb2->addChild(print5);
-
-	second_tree->setRoot(seq);
-
-	aiEngine.addBT(tree);
-	aiEngine.addBT(second_tree);
-
-
-	while (true)
-	{
-		jSystem.schedule([&]() { aiEngine.update(); });
-	
-
-		if (_kbhit()) break;
-		std::this_thread::sleep_for(16ms);
-		system("cls");
-	}
-
-
-	jSystem.terminate();
-	return 0;
-}
-*/

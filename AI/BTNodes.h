@@ -1,6 +1,6 @@
 #pragma once
 
-
+#define _DEBUG_OUT
 #include "BTNode.h"
 #include "Timer.h"
 
@@ -9,8 +9,11 @@
 #include <time.h>
 
 
+class LuaBinding;
+
 class BTFallback : public BTNode
 {
+	friend class LuaBinding;
 public:
 
 	BTFallback(std::string name) : m_Name(name)
@@ -138,6 +141,8 @@ private:
 
 class BTSequence : public BTNode
 {
+	friend class LuaBinding;
+
 public:
 
 	BTSequence(std::string name) : m_Name(name)
@@ -258,6 +263,8 @@ private:
 
 class BTRandomSequence : public BTNode
 {
+	friend class LuaBinding;
+
 public:
 	BTRandomSequence(std::string name) : m_Name(name)
 	{
@@ -398,6 +405,8 @@ private:
 
 class BTAction : public BTNode
 {
+	friend class LuaBinding;
+
 public:
 
 	BTAction(std::string name) : m_Name(name)
@@ -487,6 +496,8 @@ private:
 
 class BTCondition : public BTNode
 {
+	friend class LuaBinding;
+
 public:
 
 	BTCondition(std::string name) : m_Name(name)
@@ -573,6 +584,8 @@ private:
 
 class BTTimer : public BTCondition
 {
+	friend class LuaBinding;
+
 public:
 	enum class Policy
 	{
@@ -595,8 +608,15 @@ public:
 	* probably with a huge difference.
 	* 
 	* Thus the working will normalize with first several tree ticks.
+	* 
+	* Enums are not constructor parameters as to make LUA exposure easier.
 	*/
-	BTTimer(std::string name, Granularity g, Policy p, double condition) : BTCondition(name), m_Policy(p), m_Condition(condition), m_Granularity(g) { m_Timer.startTimer(); }
+	BTTimer(std::string name, int granularity, int policy, double condition) : BTCondition(name), m_Name(name), m_Condition(condition)
+	{
+		m_Policy = BTTimer::Policy(policy);
+		m_Granularity = BTTimer::Granularity(granularity);
+		m_Timer.startTimer();
+	}
 
 
 	BTNodeResult checkCondition() override final
@@ -746,6 +766,9 @@ private:
 	Policy m_Policy = Policy::Invalid;
 	Granularity m_Granularity = Granularity::Invalid;
 	double m_Condition = 0.0;
+
+	BTNode* m_Parent = nullptr;
+	std::string m_Name;
 };
 
 
@@ -754,6 +777,8 @@ private:
 
 class BTDecorator : public BTNode
 {
+	friend class LuaBinding;
+
 public:
 
 	BTDecorator(std::string name) : m_Name(name)
@@ -838,6 +863,8 @@ private:
 
 class BTInverter : public BTDecorator
 {
+	friend class LuaBinding;
+
 public:
 
 	BTInverter(std::string name) : BTDecorator(name)
@@ -919,11 +946,12 @@ public:
 
 private:
 
-
+	
 	BTNode* m_Parent = nullptr;
 	BTNode* m_Child = nullptr;
 
 	std::string m_Name;
+	
 };
 
 
@@ -934,6 +962,8 @@ private:
 
 class BTParallel : public BTNode
 {
+	friend class LuaBinding;
+
 public:
 
 	enum Policy

@@ -7,6 +7,7 @@
 #include <map>
 #include <mutex>
 
+
 class BTBlackboard;
 
 
@@ -55,7 +56,7 @@ public:
 	
 	void set(std::string name, Any value)
 	{
-		std::scoped_lock lock(m_Mutex);
+		std::lock_guard lock(m_Mutex);
 
 		m_Data[name].setData(value.data());
 	}
@@ -77,7 +78,7 @@ public:
 	template < typename Type >
 	Type getData(std::string name)
 	{
-		std::scoped_lock lock(m_Mutex);
+		std::lock_guard lock(m_Mutex);
 
 		return m_Data[name].as< Type >();
 	}
@@ -98,5 +99,5 @@ private:
 
 	std::list<BTAction*> m_PassedActions;
 
-	std::mutex m_Mutex;
+	mutable std::mutex m_Mutex{};
 };
