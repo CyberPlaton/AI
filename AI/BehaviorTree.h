@@ -5,7 +5,6 @@
 #include "BTBlackboard.h"
 #include "Any.h"
 
-
 class BehaviorTree
 {
 public:
@@ -21,6 +20,8 @@ public:
 	{
 		m_Root = node;
 	}
+
+
 
 
 public:

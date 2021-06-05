@@ -126,7 +126,7 @@ public:
 
 			// Load script..
 			int result = lua_pcall(LuaBinding::getLua(), 0, LUA_MULTRET, 0);
-			if (result != LUA_OK) return nullptr;
+			if (result != LUA_OK) return "LUA_ERROR";
 
 
 			luabridge::LuaRef luaFunc = luabridge::getGlobal(LuaBinding::getLua(), m_CurrentFunction.c_str());

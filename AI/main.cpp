@@ -160,24 +160,6 @@ public:
 };
 
 
-class BTComplexNode : public BTAction
-{
-public:
-	BTComplexNode(std::string name, BTBlackboard* b, BTNode* p, double d, Any other) : BTAction(name) { }
-
-
-	BTNodeResult command() override final
-	{
-
-#ifdef _DEBUG_OUT
-
-		using namespace std;
-		cout << color(colors::MAGENTA);
-		cout << name() << "->command()" << white << endl;
-#endif
-		return BTNodeResult::SUCCESS;
-	}
-};
 
 
 #include "BTFactory.h"
@@ -185,6 +167,17 @@ public:
 
 int main()
 {
+	
+	/*
+	* Example of how user could register his Nodes to be constructible from Lua.
+	*/
+	luabridge::getGlobalNamespace(LuaBinding::getLua())
+		.beginNamespace("ai")
+		.deriveClass<BTMemorize, BTAction>("BTMemorize")
+		.addConstructor<void(*)(std::string, BTBlackboard*)>()
+		.endClass()
+		.endNamespace();
+
 
 	using namespace std;
 	AIEngine aiEngine;
@@ -224,6 +217,7 @@ int main()
 	aiEngine.addBT(new_lua_tree);
 	aiEngine.addBT(new_tree);
 
+	aiEngine.reloadBTFromFile("lua_tree.lua", "Test Tree");
 
 	timer.startTimer();
 	while (true)

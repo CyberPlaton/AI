@@ -9,16 +9,22 @@
 #define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility. Comparing strings.
 
 enum AnyType {
-	ANY_INT,
+	ANY_INT = 0,
 	ANY_DOUBLE,
 	ANY_FLOAT,
 	ANY_STRING
 };
 
+class LuaBinding;
+
 class Any {
+	friend class LuaBinding;
 public:
 	Any(std::any value, AnyType type) : m_Value(value), m_Type(type) {}
+	Any(std::any* value, int type) : m_Value(std::move(value)) {m_Type = AnyType(type);}
 	Any(){}
+
+
 
 	// Compares two "Any" values for equality.
 	// Returns false on comparison of different types and
@@ -72,9 +78,9 @@ public:
 	}
 
 
-	void setType(AnyType t)
+	void setType(int t)
 	{
-		m_Type = t;
+		m_Type = AnyType(t);
 	}
 
 	void setData(std::any d)

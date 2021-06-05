@@ -11,13 +11,8 @@ class BTFactory
 public:
 	BTFactory(const std::string& tree_name) : m_Tree(new BehaviorTree(tree_name)){}
 
-	BehaviorTree* readFromFile(std::string path)
+	static BehaviorTree* readFromFile(std::string path)
 	{
-		/*
-		std::ifstream in_config(path);
-		if (!in_config.is_open()) return false;
-		*/
-
 		Script script(path);
 		script.pushFunction("main");
 

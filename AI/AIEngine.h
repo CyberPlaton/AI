@@ -2,6 +2,7 @@
 
 #include "BehaviorTree.h"
 #include "VGJS.h"
+#include "BTFactory.h"
 
 
 class AIEngine
@@ -42,6 +43,26 @@ public:
 		m_Trees.push_back(tree);
 	}
 
+
+	bool reloadBTFromFile(const std::string& path, const std::string& treeName)
+	{
+		BehaviorTree* tree = BTFactory::readFromFile(path);
+
+		if (tree)
+		{
+			for (auto& t : m_Trees)
+			{
+				if (t->m_Name.compare(treeName) == 0)
+				{
+					t = tree;
+					return true;
+				}
+			}
+		}
+
+
+		return false;
+	}
 
 private:
 

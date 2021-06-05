@@ -18,12 +18,19 @@ function main()
 
 	tree = ai.BehaviorTree("LuaTree")
 	
+
 	sequence = ai.BTSequence("Starting Sequence")
 	fallback = ai.BTFallback("Fallback")
 	timer = ai.BTTimer("Timer", 0, 1, 3.0)
-	
+
+	blackboard = ai.BTBlackboard("Blackboard")
+	complex = ai.BTMemorize("Memorize Node", blackboard)
+
+
+	sequence:addChild(complex)
 	sequence:addChild(timer)
 	sequence:addChild(fallback)
+
 	
 	tree:setRoot(sequence)
 

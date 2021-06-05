@@ -3,9 +3,13 @@
 LuaBinding* LuaBinding::g_pLuaBinding = nullptr;
 lua_State* LuaBinding::g_pLua = nullptr;
 
+
+
 void LuaBinding::_initLuaBinding()
 {
 	using namespace luabridge;
+
+
 
 	/*
 	* Fallback node exposing to Lua.
@@ -167,6 +171,38 @@ void LuaBinding::_initLuaBinding()
 		.addProperty<std::string>("m_Name", &BehaviorTree::m_Name)
 		.addProperty<BTNode*>("m_Root", &BehaviorTree::m_Root)
 		.addFunction("setRoot", &BehaviorTree::setRoot)
+		.endClass()
+		.endNamespace();
+
+	/*
+	* Expose "Blackboard" and "Any" classes.
+	*/
+	/*
+	* Here we try to expose std::any to lua,
+	* but if it gets constructed, in the created node it has no value -- "Empty"...
+	* 
+	* Thus from lua, we are not able to create Nodes which have "Any" as constructor parameter.
+	*/
+	getGlobalNamespace(LuaBinding::g_pLua)
+		.beginNamespace("ai")
+		.beginClass<std::any>("stdany")
+		.endClass()
+		.beginClass<Any>("Any")
+		.addConstructor<void(*)()>()
+		.addProperty<std::any>("m_Value", &Any::m_Value)
+		.addProperty<AnyType>("m_Type", &Any::m_Type)
+		.addFunction("setType", &Any::setType)
+		.addFunction("setData", &Any::setData)
+		.endClass()
+		.endNamespace();
+
+	getGlobalNamespace(LuaBinding::g_pLua)
+		.beginNamespace("ai")
+		.beginClass<BTBlackboard>("BTBlackboard")
+		.addConstructor<void(*)(std::string)>()
+		.addProperty<std::string>("m_Name", &BTBlackboard::m_Name)
+		.addProperty<std::map<std::string, Any>>("m_Data", &BTBlackboard::m_Data)
+		.addProperty<std::mutex*>("m_Mutex", &BTBlackboard::m_Mutex)
 		.endClass()
 		.endNamespace();
 
