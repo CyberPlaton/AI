@@ -1,4 +1,5 @@
 
+#define _CRT_SECURE_NO_WARNINGS
 #define _DEBUG_OUT
 #include "BTNodes.h"
 #include "AIEngine.h"
@@ -15,7 +16,7 @@
 static int seed = 0;
 static int x_ = 0;
 static int y_ = 0;
-static int size_ = 50;
+static int size_ = 100;
 PerlinNoise* g_Noise = nullptr;
 
 /*
@@ -157,7 +158,7 @@ struct Nation // Or Tribe...
 
 
 std::vector<std::vector<int>> g_Forests;
-static const int g_VecSize = 40;
+static const int g_VecSize = 100;
 
 
 
@@ -286,7 +287,7 @@ public:
 		BehaviorTree* tree = new BehaviorTree("Conway Life Tree");
 
 		BTSequence* seq = new BTSequence("Starting Sequence");
-		BTTimer* timer = new BTTimer("Timer", BTTimer::Granularity::Seconds, BTTimer::Policy::Greater, 3.0);
+		BTTimer* timer = new BTTimer("Timer", BTTimer::Granularity::Seconds, BTTimer::Policy::Greater, 0.0);
 		SpawnForests* forests = new SpawnForests("Forest Spawner");
 
 
@@ -323,7 +324,12 @@ public:
 
 		Clear(olc::Pixel(1, 1, 1, 1));
 		
-		m_AIEngine->update();
+
+		if (GetKey(olc::Key::SPACE).bPressed)
+		{
+			m_AIEngine->update();
+		}
+
 		
 		for (int i = 0; i < g_Forests.size(); i++)
 		{
@@ -377,18 +383,16 @@ public:
 				double x = (double)j / ((double)x_);
 				double y = (double)i / ((double)y_);
 
-				double d = 20.0 * g_Noise->noise(i, j, 0.8);
-				d = d - int(d);
+				double d = g_Noise->noise(10* i, 10* j, 0.8);
 
 				int r = d * 255;
 				int g = d * 255;
 				int b = d * 255;
 
-				Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(r, g, b));
+				Draw(g_VecSize + i, j, olc::Pixel(r, g, b));
 			}
 		}
 		
-
 		return true;
 	}
 
@@ -405,7 +409,7 @@ private:
 int main()
 {
 	AISandbox demo;
-	if (demo.Construct(128, 128, 8, 8))
+	if (demo.Construct(256, 128, 8, 8))
 		demo.Start();
 	return 0;
 }
