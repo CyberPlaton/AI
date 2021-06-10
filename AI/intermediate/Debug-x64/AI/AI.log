@@ -1,5 +1,23 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(504,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(505,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Any.cpp
+  LuaBinding.cpp
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Timer.h(30,19): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Timer.h(45,19): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Timer.h(60,10): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\BTNodes.h(292,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   main.cpp
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\Timer.h(30,19): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
           with
@@ -29,4 +47,6 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\main.cpp(33): message : see reference
           [
               Type=int
           ]
+  Generating Code...
+MSVCRTD.lib(initializers.obj) : warning LNK4098: defaultlib 'libcmt.lib' conflicts with use of other libs; use /NODEFAULTLIB:library
   AI.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\AI\bin\Debug-x64\AI\AI.exe

@@ -633,6 +633,7 @@ public:
 #ifdef _DEBUG_OUT
 		cout << color(colors::WHITE) << endl;
 		cout << name() << " elapsedTime = "<< dt << "s,    " << dtms << "ms,    " << dtus << "us" << white << endl;
+
 #endif
 
 		// Do timer checks based on the required granularity of time.

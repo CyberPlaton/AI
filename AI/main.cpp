@@ -219,6 +219,7 @@ int main()
 
 	aiEngine.reloadBTFromFile("lua_tree.lua", "Test Tree");
 
+
 	timer.startTimer();
 	while (true)
 	{
@@ -231,6 +232,7 @@ int main()
 		cout << "Update took: " << timer.getElapsedMilliseconds() << "ms" << endl;
 
 		if (_kbhit()) break;
+
 		std::this_thread::sleep_for(16ms);
 		system("cls");
 	}

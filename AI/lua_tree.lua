@@ -30,7 +30,6 @@ function main()
 	sequence:addChild(complex)
 	sequence:addChild(timer)
 	sequence:addChild(fallback)
-
 	
 	tree:setRoot(sequence)
 

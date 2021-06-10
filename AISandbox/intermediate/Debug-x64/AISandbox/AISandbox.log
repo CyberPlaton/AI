@@ -1,0 +1,32 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(504,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(505,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  main.cpp
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\Timer.h(30,19): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\Timer.h(45,19): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\Timer.h(60,10): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\BTNodes.h(285,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(334,59): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(334,46): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(334,34): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(338,58): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(338,45): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(338,34): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(342,58): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(342,45): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(342,34): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(383,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(384,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(385,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  AISandbox.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\bin\Debug-x64\AISandbox\AISandbox.exe

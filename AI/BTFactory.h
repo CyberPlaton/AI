@@ -20,21 +20,6 @@ public:
 
 	}
 
-	/*
-	template < typename NodeType, class...Args >
-	NodeType* add(const std::string& node_type_name, const std::string& node_name, Args... args)
-	{
-		using namespace std;
-
-		cout << "Creating \"" << node_type_name << "\"" << endl;
-
-		NodeType* node = new NodeType(node_name, args...);
-
-
-		return node;
-	}
-	*/
-
 
 	template < typename NodeType, class... Args >
 	BTFactory& add(const std::string& node_name, Args... args)
