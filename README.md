@@ -13,3 +13,9 @@ Exploring Artificial Intelligence based.
 
 ## Tested Behavior Tree 3)
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/BT_0.3.png)
+
+# Heightmap generation compared to Perlin Noise  
+## Heightmap 1)
+![alt text](https://github.com/CyberPlaton/AI/blob/master/HeightMapGeneration_1.png)
+## Heightmap 2)
+![alt text](https://github.com/CyberPlaton/AI/blob/master/HeightMapGeneration_2.png)
