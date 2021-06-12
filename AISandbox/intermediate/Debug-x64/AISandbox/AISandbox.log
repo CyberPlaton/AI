@@ -17,16 +17,4 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\Timer.h(60,10): warning C4244:
               _Rep=__int64
           ]
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\BTNodes.h(285,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(340,59): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(340,46): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(340,34): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(344,58): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(344,45): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(344,34): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(348,58): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(348,45): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(348,34): warning C4244: 'argument': conversion from 'double' to 'uint8_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(388,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(389,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(390,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   AISandbox.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\bin\Debug-x64\AISandbox\AISandbox.exe

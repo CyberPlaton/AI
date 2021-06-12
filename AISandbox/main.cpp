@@ -10,13 +10,19 @@
 #include <vector>
 #include <random>
 #include <list>
+#include <cstdlib>
+#include <cmath>
 
 #include "PerlinNoise.h"
 
 static int seed = 0;
-static int x_ = 0;
-static int y_ = 0;
-static int size_ = 100;
+static double perlin_xy_scalar = 50.0;
+static double perlin_octave_scalar = 1.0;
+static double perlin_redistribution_scalar = 1.0;
+static double perlin_polar = 1.0;
+static double perlin_equator = 180.0;
+
+
 PerlinNoise* g_Noise = nullptr;
 
 /*
@@ -153,23 +159,55 @@ struct Nation // Or Tribe...
 
 
 
+struct Biome
+{
+	Biome(const std::string& name, double height, double moisture) : moisture(moisture), name(name), height(height){}
+
+	std::string name;
+	double moisture;
+	double height;
+};
+
+
+struct Tree
+{
+	Tree(double x, double y, const std::string& biome) : x(x), y(y), biome(biome) {}
+
+	double x;
+	double y;
+	std::string biome;
+};
+
+
+std::vector<std::vector<double>> g_HeightMap;
+std::vector<std::vector<Biome*>> g_BiomeMap;
+std::vector<std::vector<Tree*>> g_TreeMap;
+
+
+static const int g_VecSize = 200;
 
 
 
-
-std::vector<std::vector<int>> g_Forests;
-static const int g_VecSize = 100;
-
-
-
-class SpawnForests : public BTAction
+class HeightGenerator : public BTAction
 {
 public:
-	SpawnForests(std::string name) : BTAction(name) 
+	HeightGenerator(std::string name) : BTAction(name)
 	{
 		// Initialize empty forests...
-		g_Forests.resize(g_VecSize);
-		for (auto& v : g_Forests)
+		g_HeightMap.resize(g_VecSize);
+		for (auto& v : g_HeightMap)
+		{
+			v.resize(g_VecSize);
+		}
+
+		g_BiomeMap.resize(g_VecSize);
+		for (auto& v : g_BiomeMap)
+		{
+			v.resize(g_VecSize);
+		}
+
+		g_TreeMap.resize(g_VecSize);
+		for (auto& v : g_TreeMap)
 		{
 			v.resize(g_VecSize);
 		}
@@ -181,50 +219,66 @@ public:
 		using namespace std;
 
 		// Create a new forest matrix.
-		std::vector<std::vector<int>> new_forests;
+		std::vector<std::vector<double>> new_forests;
 		new_forests.resize(g_VecSize);
 		for (auto& v : new_forests)
 		{
 			v.resize(g_VecSize);
 		}
 		
-		for (int i = 0; i < g_Forests.size(); i++)
+		for (int i = 0; i < g_HeightMap.size(); i++)
 		{
-			for (int j = 0; j < g_Forests[i].size(); j++)
+			for (int j = 0; j < g_HeightMap[i].size(); j++)
 			{
 				// Ignore the 0 and last indices.
-				if (i == 0 || j == 0 || i == g_Forests.size() - 1 || j == g_Forests[i].size() - 1) continue;
+				if (i == 0 || j == 0 || i == g_HeightMap.size() - 1 || j == g_HeightMap[i].size() - 1) continue;
 
 
 				// Get neighbors.
-				int neighbors = _neighbors(i, j);
+				double neighbors = _neighbors(i, j);
 
+				double dist = 2 * std::max(std::abs(i), std::abs(j));
+				neighbors = (neighbors - neighbors / dist) / 2;
 
-				// Check conway stuff.
-				// Here it always can be just one, either on or off.
-				if (neighbors >= 2 && neighbors <= 3)
+				neighbors = std::lerp(neighbors, g_HeightMap[i][j], neighbors);
+
+				double PI = 3.14145;
+				neighbors = 10 * neighbors * neighbors + 0.1 + (0.2 - 0.1) * std::sin(PI * (g_VecSize / g_VecSize));
+
+				if (neighbors < 0.1)
 				{
-					new_forests[i][j] = 1;
+					new_forests[i][j] = 0.1;
 				}
-				else if(neighbors > 3 && neighbors <= 4)
+				else if (neighbors < 0.12)
 				{
-					new_forests[i][j] = 2;
+					new_forests[i][j] = 0.12;
 				}
-				else if (neighbors == 1)
+				if (neighbors >= 0.12 && neighbors <= 0.3)
 				{
-					new_forests[i][j] = 3;
+					new_forests[i][j] = 0.2;
 				}
-				else
+				else if (neighbors > 0.3 && neighbors <= 0.6)
+				{
+					new_forests[i][j] = 0.5;
+				}
+				else if (neighbors > 0.6 && neighbors <= 0.7)
+				{
+					new_forests[i][j] = 0.6;
+				}
+				else if (neighbors > 0.7 && neighbors <= 1.0)
+				{
+					new_forests[i][j] = 1.0;
+				}
+				else // Greater than 1.0
 				{
 					new_forests[i][j] = 0;
 				}
-
 			}
 		}
 
 
 		// Replace the old one with the new one.
-		g_Forests = new_forests;
+		g_HeightMap = new_forests;
 
 #ifdef _DEBUG_OUT
 		cout << color(colors::GREEN) << endl;
@@ -238,36 +292,49 @@ public:
 private:
 
 
-	int _neighbors(int x, int y)
+	double _neighbors(int x, int y)
 	{
 
 		// We have to check 8 neighbors.
-		// On second thought, we define neighbors as not vertical, so only 4.
-		int neighbors = 0;
+		double neighbors = g_HeightMap[x][y];
 		
-		if (g_Forests[x - 1][y - 1] != 0) neighbors++;
-
-		if (g_Forests[x][y - 1] != 0) neighbors++;
-
-		if (g_Forests[x + 1][y - 1] != 0) neighbors++;
-
-		if (g_Forests[x - 1][y] != 0) neighbors++;
-
-		if (g_Forests[x + 1][y] != 0) neighbors++;
-
-		if (g_Forests[x - 1][y + 1] != 0) neighbors++;
-
-		if (g_Forests[x][y + 1] != 0) neighbors++;
-
-		if (g_Forests[x + 1][y + 1] != 0) neighbors++;
-		
+		double a = g_HeightMap[x - 1][y - 1];
+		double b = g_HeightMap[x][y - 1];
+		double c = g_HeightMap[x + 1][y - 1];
+		double d = g_HeightMap[x - 1][y];
+		double e = g_HeightMap[x + 1][y];
+		double f = g_HeightMap[x - 1][y + 1];
+		double g = g_HeightMap[x][y + 1];
+		double h = g_HeightMap[x + 1][y + 1];
 
 
+		neighbors = (a + b + c + d + e + f + g + h) / 8.0;
+
+		/*
+		if (g_HeightMap[x - 1][y - 1] != 0) neighbors++;
+
+		if (g_HeightMap[x][y - 1] != 0) neighbors++;
+
+		if (g_HeightMap[x + 1][y - 1] != 0) neighbors++;
+
+		if (g_HeightMap[x - 1][y] != 0) neighbors++;
+
+		if (g_HeightMap[x + 1][y] != 0) neighbors++;
+
+		if (g_HeightMap[x - 1][y + 1] != 0) neighbors++;
+
+		if (g_HeightMap[x][y + 1] != 0) neighbors++;
+
+		if (g_HeightMap[x + 1][y + 1] != 0) neighbors++;
+		*/
 
 		return neighbors;
 	}
 };
 
+
+#include <fstream>
+#include <cstdio>
 
 class AISandbox : public olc::PixelGameEngine
 {
@@ -288,7 +355,7 @@ public:
 
 		BTSequence* seq = new BTSequence("Starting Sequence");
 		BTTimer* timer = new BTTimer("Timer", BTTimer::Granularity::Seconds, BTTimer::Policy::Greater, 0.0);
-		SpawnForests* forests = new SpawnForests("Forest Spawner");
+		HeightGenerator* forests = new HeightGenerator("HeightGenerator");
 
 
 
@@ -308,12 +375,14 @@ public:
 		{
 			for (int j = 0; j < g_VecSize; j++)
 			{
-				g_Forests[i][j] = rand() % 2;
+				g_HeightMap[i][j] = 0.1 * (rand() % 10);
+				g_BiomeMap[i][j] = nullptr;
+				g_TreeMap[i][j] = nullptr;
 			}
 
 		}
 
-		g_Noise = new PerlinNoise(236);
+		g_Noise = new PerlinNoise(2313);
 
 		return true;
 	}
@@ -324,32 +393,134 @@ public:
 
 		Clear(olc::Pixel(1, 1, 1, 1));
 		
-
 		if (GetKey(olc::Key::SPACE).bPressed)
 		{
 			m_AIEngine->update();
+
+			perlin_xy_scalar = 25;
+			perlin_redistribution_scalar = 4.75;
 		}
 
-		
-		for (int i = 0; i < g_Forests.size(); i++)
+
+		if (GetKey(olc::Key::ENTER).bPressed)
 		{
-			for (int j = 0; j < g_Forests[i].size(); j++)
+
+			std::vector<std::vector<Tree*>> new_forest_map;
+			new_forest_map.resize(g_VecSize);
+			for (auto& v : new_forest_map)
 			{
-				if (g_Forests[i][j] == 1)
+				v.resize(g_VecSize);
+			}
+		
+
+			for (int i = 1; i < g_VecSize - 1; i++)
+			{
+				for (int j = 1; j < g_VecSize - 1; j++)
 				{
-					Draw(i, j, olc::Pixel(0.299 * 10, 0.587 * 230, 0.114 * 100));
+
+					double d = g_BiomeMap[i][j]->height;
+					double m = g_BiomeMap[i][j]->moisture;
+
+
+					// Draw created map with added trees.
+					if (d < 0.2) // Ocean
+					{
+					}
+					else if (d >= 0.2 && d < 0.25) // Sea
+					{
+					}
+					else if (d >= 0.25 && d < 0.3) // Sand
+					{
+					}
+					else if (d >= 0.3 && d < 0.4) // Savannah
+					{
+						if (m < 0.5)
+						{
+							if (rand() % 20 == 0)
+							{
+								new_forest_map[i][j] = new Tree(i, j, "Tundra");
+							}
+
+						}
+						else if (m >= 0.5)
+						{
+							if (rand() % 30 == 0)
+							{
+								new_forest_map[i][j] = new Tree(i, j, "Savannah");
+							}
+
+						}
+					}
+					else if (d >= 0.4 && d < 0.9) // Land / Jungle
+					{
+						if (m >= 0.3)
+						{
+							if (rand() % 4 == 0)
+							{
+								new_forest_map[i][j] = new Tree(i, j, "Jungle");
+							}
+
+						}
+						else if (m < 0.3)
+						{
+							if (rand() % 8 == 0)
+							{
+								new_forest_map[i][j] = new Tree(i, j, "Temperate");
+							}
+
+						}
+					}
+					else // Mountains
+					{
+					}
+
 				}
-				else if (g_Forests[i][j] == 2)
+
+			}
+
+			g_TreeMap = new_forest_map;
+		}
+
+
+		/*
+		for (int i = 0; i < g_HeightMap.size(); i++)
+		{
+			for (int j = 0; j < g_HeightMap[i].size(); j++)
+			{
+				double d = g_HeightMap[i][j];
+
+				int r = d * 255;
+				int g = d * 255;
+				int b = d * 255;
+
+
+				// Draw terrain types based on heightmap.
+				if (d < 0.1) // Ocean
 				{
-					Draw(i, j, olc::Pixel(0.299 * 5, 0.587 * 135, 0.114 * 10));
+					Draw(i, j, olc::Pixel(0, 0, 139));
 				}
-				else if (g_Forests[i][j] == 3)
+				else if (d >= 0.1 && d < 0.4) // Sea
 				{
-					Draw(i, j, olc::Pixel(0.299 * 5, 0.587 * 255, 0.114 * 150));
+					Draw(i, j, olc::Pixel(0, 178, 238));
 				}
+				else if (d >= 0.4 && d < 0.45) // Sand
+				{
+					Draw(i, j, olc::Pixel(244, 164, 0));
+				}
+				else if (d >= 0.6 && d < 0.7)
+				{
+					Draw(i, j, olc::Pixel(139, 69, 19));
+				}
+				else // Land
+				{
+					Draw(i, j, olc::Pixel(0, 139, 0));
+				}
+
+
+				//Draw(i, j, olc::Pixel(r, g, b));
 			}
 		}
-
+		*/
 
 		if (GetKey(olc::Key::R).bPressed)
 		{
@@ -357,7 +528,7 @@ public:
 			{
 				for (int j = 0; j < g_VecSize; j++)
 				{
-					g_Forests[i][j] = rand() % 2;
+					g_HeightMap[i][j] = 0.1 * (rand() % 2);
 				}
 
 			}
@@ -369,29 +540,403 @@ public:
 		{
 			delete g_Noise;
 			seed = rand();
-			x_ = rand();
-			y_ = rand();
-
 			g_Noise = new PerlinNoise(seed);
 		}
 
 
-		for (int i = 0; i < size_; i++)
+		
+		if (GetKey(olc::Key::UP).bHeld)
 		{
-			for (int j = 0; j < size_; j++)
+			perlin_xy_scalar += 1.1;
+		}
+		if (GetKey(olc::Key::DOWN).bHeld)
+		{
+			perlin_xy_scalar -= 1.1;
+		}
+		if (GetKey(olc::Key::RIGHT).bHeld)
+		{
+			perlin_octave_scalar += 0.1;
+		}
+		if (GetKey(olc::Key::LEFT).bHeld)
+		{
+			perlin_octave_scalar -= 0.1;
+		}
+		if (GetKey(olc::Key::W).bHeld)
+		{
+			perlin_redistribution_scalar += 0.01;
+		}
+		if (GetKey(olc::Key::S).bHeld)
+		{
+			perlin_redistribution_scalar -= 0.01;
+		}
+		if (GetKey(olc::Key::Q).bHeld)
+		{
+			perlin_polar += 0.1;
+		}
+		if (GetKey(olc::Key::E).bHeld)
+		{
+			perlin_polar -= 0.1;
+		}
+		if (GetKey(olc::Key::O).bHeld)
+		{
+			perlin_equator += 0.1;
+		}
+		if (GetKey(olc::Key::P).bHeld)
+		{
+			perlin_equator -= 0.1;
+		}
+
+
+		for (int i = 0; i < g_VecSize; i++)
+		{
+			for (int j = 0; j < g_VecSize; j++)
 			{
-				double x = (double)j / ((double)x_);
-				double y = (double)i / ((double)y_);
+				double x = (double)j / ((double)g_VecSize) - 0.5;
+				double y = (double)i / ((double)g_VecSize) - 0.5;
 
-				double d = g_Noise->noise(10* i, 10* j, 0.8);
+				double d = 0.0;
+				double m = 0.0;
 
-				int r = d * 255;
-				int g = d * 255;
-				int b = d * 255;
+				// Generate the perlin height map.
+				/*
+				* Good values seem to be:
+				* perlin_xy_scalar = 25
+				* perlin_redistribution_scalar = 4.75
+				* 
+				* rest does not need to be set.
+				*/
+				double wavelength = g_VecSize / perlin_xy_scalar;
 
-				Draw(g_VecSize + i, j, olc::Pixel(r, g, b));
+				d = 1.0 * g_Noise->noise(wavelength * x, wavelength * y, 1.0) +
+					0.5 * g_Noise->noise(2 * wavelength * x, 2 * wavelength * y, 1.0) +
+					0.25 * g_Noise->noise(4 * wavelength * x, 4 * wavelength * y, 1.0);
+
+				d = std::pow(d, perlin_redistribution_scalar);
+				d = std::clamp(d, 0.0, 1.0);
+
+
+
+				// Generate perlin moisture map.
+				m = g_Noise->noise(wavelength * x, wavelength * y, wavelength * x * y);
+
+				// Manhatten.
+				double dist = std::abs(x) + std::abs(y);
+				m = perlin_polar * (0.5 + m - dist) / 2;
+
+				m = std::clamp(m, 0.0, 1.0);
+
+
+				// Draw terrain types based on heightmap.
+				if (d < 0.2) // Ocean
+				{
+					Draw(i, j, olc::Pixel(0, 0, 139));
+				}
+				else if (d >= 0.2 && d < 0.25) // Sea
+				{
+					Draw(i, j, olc::Pixel(0, 178, 238));
+				}
+				else if (d >= 0.25 && d < 0.3) // Sand
+				{
+					Draw(i, j, olc::Pixel(245, 222, 179));
+				}
+				else if (d >= 0.3 && d < 0.4) // Savannah
+				{
+					Draw(i, j, olc::Pixel(244, 164, 96));
+				}
+				else if (d >= 0.4 && d < 0.9) // Land / Jungle
+				{
+					Draw(i, j, olc::Pixel(34, 139, 34));
+				}
+				else // Mountains
+				{
+					Draw(i, j, olc::Pixel(139, 69, 19));
+				}
+
+
+				// Draw moisture map.
+				if (m < 0.1)
+				{
+					Draw(g_VecSize + i, j, olc::Pixel(0, 0, 139));
+				}
+				else if (m >= 0.1 && m < 0.12)
+				{
+					Draw(g_VecSize + i, j, olc::Pixel(65, 105, 225));
+				}
+				else if (m >= 0.12 && m < 0.3)
+				{
+					Draw(g_VecSize + i, j, olc::Pixel(0, 191, 255));
+				}
+				else
+				{
+					Draw(g_VecSize + i, j, olc::Pixel(135, 206, 250));
+				}
+
+
+
+				// Draw created map from height and moisture.
+				if (d < 0.2) // Ocean
+				{
+					Draw(i, g_VecSize + j, olc::Pixel(0, 0, 139));
+					
+					g_BiomeMap[i][j] = new Biome("Ocean", d, m);
+				}
+				else if (d >= 0.2 && d < 0.25) // Sea
+				{
+					Draw(i, g_VecSize + j, olc::Pixel(0, 178, 238));
+
+					g_BiomeMap[i][j] = new Biome("Sea", d, m);
+
+				}
+				else if (d >= 0.25 && d < 0.3) // Sand
+				{
+					Draw(i, g_VecSize + j, olc::Pixel(245, 222, 179));
+
+					g_BiomeMap[i][j] = new Biome("Sand", d, m);
+				}
+				else if (d >= 0.3 && d < 0.4) // Savannah
+				{
+					if (m < 0.5)
+					{
+						Draw(i, g_VecSize + j, olc::Pixel(0, 100, 0)); // Tundra Tile.
+
+						g_BiomeMap[i][j] = new Biome("Tundra", d, m);
+
+					}
+					else if (m >= 0.5)
+					{
+						Draw(i, g_VecSize + j, olc::Pixel(244, 164, 96)); // Savannah
+
+						g_BiomeMap[i][j] = new Biome("Savannah", d, m);
+
+					}
+				}
+				else if (d >= 0.4 && d < 0.9) // Land / Jungle
+				{
+					if (m >= 0.3)
+					{
+						Draw(i, g_VecSize + j, olc::Pixel(75, 0, 130)); // Jungle Tile.
+
+						g_BiomeMap[i][j] = new Biome("Jungle", d, m);
+
+					}
+					else if (m < 0.3)
+					{
+						Draw(i, g_VecSize + j, olc::Pixel(34, 139, 34)); // Normal Temperate.
+
+						g_BiomeMap[i][j] = new Biome("Temperate", d, m);
+
+					}
+				}
+				else // Mountains
+				{
+					Draw(i, g_VecSize + j, olc::Pixel(139, 69, 19));
+
+					g_BiomeMap[i][j] = new Biome("Mountain", d, m);
+
+				}
+
+
+
+				// Draw created map with added trees.
+				if (d < 0.2) // Ocean
+				{
+					Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(0, 0, 139));
+					if (g_TreeMap[i][j] != nullptr)
+					{
+						if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+					}
+				}
+				else if (d >= 0.2 && d < 0.25) // Sea
+				{
+					Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(0, 178, 238));
+					if (g_TreeMap[i][j] != nullptr)
+					{
+						if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+					}
+				}
+				else if (d >= 0.25 && d < 0.3) // Sand
+				{
+					Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(245, 222, 179));
+					if (g_TreeMap[i][j] != nullptr)
+					{
+						if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+					}
+				}
+				else if (d >= 0.3 && d < 0.4) // Savannah
+				{
+					if (m < 0.5)
+					{
+						Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(0, 100, 0)); // Tundra Tile.
+						if (g_TreeMap[i][j] != nullptr)
+						{
+							if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+						}
+					}
+					else if (m >= 0.5)
+					{
+						Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(244, 164, 96)); // Savannah
+						if (g_TreeMap[i][j] != nullptr)
+						{
+							if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+						}
+					}
+				}
+				else if (d >= 0.4 && d < 0.9) // Land / Jungle
+				{
+					if (m >= 0.3)
+					{
+						Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(75, 0, 130)); // Jungle Tile.
+						if (g_TreeMap[i][j] != nullptr)
+						{
+							if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+						}
+					}
+					else if (m < 0.3)
+					{
+						Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(34, 139, 34)); // Normal Temperate.
+						if (g_TreeMap[i][j] != nullptr)
+						{
+							if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+							else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+							{
+								FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+							}
+						}
+					}
+				}
+				else // Mountains
+				{
+					Draw(g_VecSize + i, g_VecSize + j, olc::Pixel(139, 69, 19));
+					if (g_TreeMap[i][j] != nullptr)
+					{
+						if (g_TreeMap[i][j]->biome.compare("Temperate") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Jungle") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Tundra") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+						else if (g_TreeMap[i][j]->biome.compare("Savannah") == 0)
+						{
+							FillCircle(g_VecSize + i, g_VecSize + j, 1, olc::BACK);
+						}
+					}
+				}
 			}
 		}
+		
+		
+		DrawString(0, 0, "Frequency:" + std::to_string(perlin_xy_scalar));
+		DrawString(0, 10, "Octave:" + std::to_string(perlin_octave_scalar));
+		DrawString(0, 20, "Redist:" + std::to_string(perlin_redistribution_scalar));
+		DrawString(0, 30, "Polar:" + std::to_string(perlin_polar));
+		DrawString(0, 40, "Equator:" + std::to_string(perlin_equator));
 		
 		return true;
 	}
@@ -409,7 +954,7 @@ private:
 int main()
 {
 	AISandbox demo;
-	if (demo.Construct(256, 128, 8, 8))
+	if (demo.Construct(648, 480, 2, 2))
 		demo.Start();
 	return 0;
 }
