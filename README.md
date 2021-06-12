@@ -16,6 +16,6 @@ Exploring Artificial Intelligence based.
 
 # Heightmap generation compared to Perlin Noise  
 ## Heightmap 1)
-![alt text](https://github.com/CyberPlaton/AI/blob/master/HeightMapGeneration_1.png)
+![alt text](https://github.com/CyberPlaton/AI/blob/master/HeightMaps_1.png)
 ## Heightmap 2)
-![alt text](https://github.com/CyberPlaton/AI/blob/master/HeightMapGeneration_2.png)
+![alt text](https://github.com/CyberPlaton/AI/blob/master/HeightMaps_2.png)
