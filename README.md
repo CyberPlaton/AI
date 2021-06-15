@@ -1,5 +1,6 @@
 # AI
-Exploring Artificial Intelligence based.
+Exploring Artificial Intelligence based.  
+Note: The solution is not meant to show optimized code and serves only as a testbed.
 
 ## References: 
 "Behavior Trees in Robotics and Al. An Introduction", Michele Colledanchise.  
