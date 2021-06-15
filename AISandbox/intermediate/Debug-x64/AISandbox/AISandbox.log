@@ -17,17 +17,27 @@ C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\Timer.h(60,10): warning C4244:
               _Rep=__int64
           ]
 C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\BTNodes.h(285,16): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(563,105): warning C4552: '+': result of expression not used
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(2984,60): warning C4244: 'argument': conversion from 'double' to 'int32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3083,59): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(28,39): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(565,105): warning C4552: '+': result of expression not used
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(2089,54): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3058,93): warning C4244: 'argument': conversion from 'double' to 'int32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3081,55): warning C4244: 'argument': conversion from 'double' to 'int32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3087,85): warning C4244: 'argument': conversion from 'double' to 'int32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3157,59): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
           with
           [
               _Ty=int
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3143,59): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3217,59): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
           with
           [
               _Ty=int
           ]
-C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3278): warning C4715: 'historicalEventString': not all control paths return a value
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3370,57): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3381): warning C4715: 'pickRandomNation': not all control paths return a value
+C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\main.cpp(3352): warning C4715: 'historicalEventString': not all control paths return a value
   AISandbox.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\AI\AI\AISandbox\bin\Debug-x64\AISandbox\AISandbox.exe

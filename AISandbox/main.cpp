@@ -25,7 +25,7 @@ static double perlin_equator = 180.0;
 
 static bool g_NationsGenerated = false;
 static int g_NeighborOffset = 2;
-static int g_NeighborStandardDistance = 10;
+static int g_NeighborStandardDistance = 10 * perlin_xy_scalar * 0.07; // Consider effects of scaling the map with perlin noise.
 static bool g_ShowNeighbors = true;
 static int g_NationSimulationSteps = 100;
 
@@ -185,7 +185,7 @@ struct Nation // Or Tribe...
 	std::list<Nation*> m_EnemyNations;
 
 
-	double m_Population = 3.0;
+	double m_Population = 2.0;
 	double m_Territory = 3.0;
 };
 
@@ -242,6 +242,8 @@ std::string historicalEventString(HistoricalEvent e);
 std::string raceToString(Nation::Race r);
 std::string pickRandomTrait(std::vector<std::string> vec);
 Nation::Race pickRandomRace(); // We have 8 Races.
+Nation* pickRandomNation(std::list<Nation*> l);
+void eraseNationFromList(std::list<Nation*> l, Nation* n);
 std::string pickRandomLanguage(std::vector<std::string> vec);
 void pickRandomColor(int v[3]);
 bool isNationInNeighbors(Nation* n, std::list<Nation*> list);
@@ -288,7 +290,7 @@ std::vector<std::vector<Nation*>> g_NationsMap; // Nations storage with direct p
 std::vector<std::vector<std::string>> g_CultureDistribution; // Defines culture archetype at a given point x, y.
 std::vector<std::vector<Nation::Race>> g_RacialDistribution; // Defines racial archetype at a given point x, y.
 std::vector<std::string> g_NationLanguages;
-static const int g_NationCount = 100;
+static const int g_NationCount = 250;
 
 
 /*
@@ -1475,7 +1477,7 @@ public:
 
 					case HistoricalEvent::HIST_PEACE:
 
-						if (nation->operator()("Warfaring") > 0.5)
+						if (nation->operator()("Warfaring") > 0.5 && nation->m_EnemyNations.size() > 0)
 						{
 							hist_event_probabilities[HistoricalEvent::HIST_PEACE] -= 0.3;
 						}
@@ -1489,7 +1491,7 @@ public:
 
 					case HistoricalEvent::HIST_WAR:
 
-						if (nation->operator()("Warfaring") > 0.5)
+						if (nation->operator()("Warfaring") > 0.5 && nation->m_Neighbors.size() > 0) // War can only be waged on "neighbors".
 						{
 							hist_event_probabilities[HistoricalEvent::HIST_WAR] -= 0.1; // Simulate war weariness, which is lesser for nations specializing in war...
 						}
@@ -1513,6 +1515,18 @@ public:
 				}
 
 
+				// Sanity check...
+				if (nation->m_EnemyNations.size() == 0) // No peace if no war...
+				{
+					hist_event_probabilities[HistoricalEvent::HIST_PEACE] = 0.0;
+				}
+				if (nation->m_Neighbors.size() == 0) // No war with no neighbors...
+				{
+					hist_event_probabilities[HistoricalEvent::HIST_WAR] = 0.0;
+					hist_event_probabilities[HistoricalEvent::HIST_NEIGHBOR_FEUD] = 0.0;
+					hist_event_probabilities[HistoricalEvent::HIST_FRIENDLY_NEIGHBOR] = 0.0;
+				}
+
 
 				/*
 				* Lastly, choose most probable event to happen and simulate his occurence.
@@ -1531,6 +1545,7 @@ public:
 
 
 				// Resolve what happens on current historical event.
+				Nation* other_nation = nullptr;
 				switch (most_prob_event)
 				{
 					case HistoricalEvent::HIST_AGRI_DOWN:
@@ -1594,23 +1609,53 @@ public:
 					case HistoricalEvent::HIST_TECH_UPRISE:
 						nation->m_AntiPairs["Technologic"] += 0.1;
 						break;
-					case HistoricalEvent::HIST_PEACE: // TODO
+					case HistoricalEvent::HIST_PEACE: // Peace can only happen with another nation this one is at war with.
 						nation->m_Population += 0.2;
+
+
+						other_nation = pickRandomNation(nation->m_EnemyNations);
+						other_nation->m_Population += 0.2;
+						other_nation->m_History.push_back(HistoricalEvent::HIST_PEACE);
+
+
+						// Let them be neutral now...
+						eraseNationFromList(nation->m_EnemyNations, other_nation);
+						eraseNationFromList(other_nation->m_EnemyNations, nation);
+
+
 						break;
-					case HistoricalEvent::HIST_WAR: // TODO
+					case HistoricalEvent::HIST_WAR: // War can only happen with 2 nations, thus we modify the state of both.
 						nation->m_Population -= 0.2;
+
+						
+						// Other nation. MUST be a neighbor.
+						other_nation = pickRandomNation(nation->m_Neighbors);
+						other_nation->m_Population -= 0.2;
+						other_nation->m_History.push_back(HistoricalEvent::HIST_WAR);
+
+
+						// Let them be enemies...
+						other_nation->m_EnemyNations.push_back(nation);
+						nation->m_EnemyNations.push_back(other_nation);
+
 						break;
 				}
 
+				// Store historical event in own history...
+				nation->m_History.push_back(most_prob_event);
+
 
 				// Define territory with influence of population...
-				nation->m_Territory += nation->m_Population * 0.01;
+				nation->m_Territory += nation->m_Population * 0.007;
 
 
 				// Normalize the anti-pairs of a nation to be 1.0 if summed.
 				for (auto& pair : nation->m_AntiPairs)
 				{
-					if (nation->operator()(pair.first) + nation->operator()(g_AntiPairs[pair.first]) > 1.0) // Sum greater than 1.0, disbalance...
+					std::pair < std::string, double> pFirst = pair;
+					std::pair < std::string, double> pSecond = std::make_pair(g_AntiPairs[pair.first], nation->operator()(g_AntiPairs[pair.first]));
+
+					if (pFirst.second + pSecond.second > 1.0) // Sum greater than 1.0, disbalance...
 					{
 						// Policy, decrease the greater value...
 						double first = nation->operator()(pair.first);
@@ -1625,6 +1670,22 @@ public:
 						else
 						{
 							nation->m_AntiPairs[g_AntiPairs[pair.first]] -= decrease_value; // Decrease the value of the anti-pair.
+						}
+					}
+					else if (pFirst.second + pSecond.second < 1.0) // Sum smaller than 1.0, disbalance...
+					{
+						// Policy, fill the smaller up...
+
+						double increase_value = 0.0;
+						if (pFirst.second > pSecond.second)
+						{
+							increase_value = (pFirst.second - pSecond.second);
+							nation->m_AntiPairs[pSecond.first] += increase_value;
+						}
+						else
+						{
+							increase_value = (pSecond.second - pFirst.second);
+							nation->m_AntiPairs[pFirst.first] += increase_value;
 						}
 					}
 				}
@@ -1646,6 +1707,12 @@ public:
 
 				cout << color(colors::CYAN);
 				cout << prob << white << endl;
+
+
+				cout << endl;
+				cout << endl;
+				cout << endl;
+				cout << endl;
 #endif
 			}
 
@@ -1731,6 +1798,12 @@ public:
 		g_AntiPairs.emplace("Isolationist", "Expansive");
 		g_AntiPairs.emplace("Industrial", "Agricultural");
 		g_AntiPairs.emplace("Warfaring", "Pacifist");
+		g_AntiPairs.emplace("Materialistic", "Spiritual");
+		g_AntiPairs.emplace("Primitive", "Technologic");
+		g_AntiPairs.emplace("Non-Economic", "Economic");
+		g_AntiPairs.emplace("Expansive", "Isolationist");
+		g_AntiPairs.emplace("Agricultural", "Industrial");
+		g_AntiPairs.emplace("Pacifist", "Warfaring");
 
 		/*
 		* Defining beginning racial traits from which to choose from.
@@ -2014,6 +2087,9 @@ public:
 
 		Clear(olc::Pixel(1, 1, 1, 1));
 		
+		
+		g_NeighborStandardDistance = 10 * perlin_xy_scalar * 0.07;
+
 
 		if (GetKey(olc::Key::BACK).bPressed)
 		{
@@ -2981,7 +3057,7 @@ public:
 
 			// Draw national Border around self.
 			olc::Pixel c = olc::Pixel(n->m_NationColor[0], n->m_NationColor[1], n->m_NationColor[2], 230);
-			DrawCircle(g_VecSize + n->x_pos, g_VecSize + n->y_pos, n->m_Territory, c);
+			DrawCircle(g_VecSize + n->x_pos, g_VecSize + n->y_pos, n->m_Territory * perlin_xy_scalar * 0.07, c);
 		}
 
 
@@ -3004,13 +3080,13 @@ public:
 						// Draw circle around self.
 						Nation* nation = g_NationsMap[i][j];
 						olc::Pixel c = olc::Pixel(nation->m_NationColor[0], nation->m_NationColor[1], nation->m_NationColor[2], 255);
-						DrawCircle(mousex, mousey, 3, c);
+						DrawCircle(mousex, mousey, 3 * perlin_xy_scalar * 0.07, c);
 
 						if (g_ShowNeighbors)
 						{
 							for (auto& n : g_NationsMap[i][j]->m_Neighbors)
 							{
-								DrawCircle(n->x_pos + g_VecSize, n->y_pos + g_VecSize, 3, olc::GREEN);
+								DrawCircle(n->x_pos + g_VecSize, n->y_pos + g_VecSize, 3 * perlin_xy_scalar * 0.07, olc::GREEN);
 							}
 						}
 
@@ -3274,5 +3350,46 @@ std::string historicalEventString(HistoricalEvent e)
 		return "peace";
 	case HistoricalEvent::HIST_WAR:
 		return "war";
+	}
+}
+
+
+
+Nation* pickRandomNation(std::list<Nation*> l)
+{
+	using namespace std;
+
+	// Dont allow empty lists.
+	if (l.size() == 0)
+	{
+		cout << color(colors::RED);
+		cout << "FATAL ERROR: List size 0." << white << endl;
+
+		throw std::runtime_error("");
+	}
+
+
+	std::uniform_int_distribution<int> dis(0, l.size() - 1);
+
+
+	int index = dis(g_Generator);
+	int count = 0;
+	for (auto& n : l)
+	{
+		if (count == index) return n;
+
+		count++;
+	}
+}
+
+
+
+void eraseNationFromList(std::list<Nation*> l, Nation* n)
+{
+	std::list<Nation*>::iterator it = std::find(l.begin(), l.end(), n);
+
+	if (it != l.end())
+	{
+		l.erase(it);
 	}
 }
