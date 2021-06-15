@@ -46,6 +46,6 @@ Exploring Artificial Intelligence based.
 ### Left Down: "Race" Distribution Map (where we have 8 races, e.g. High Elfes, Orcs).  
 ### Right Down: Final World Map with Nation placement and their simulation after x steps.  
 #### In a game these steps would be required on world map generation, after which the player
-can choose a nation to play as. The simulation can be easily altered with new nation and race placements or even new map generation data.  
+#### can choose a nation to play as. The simulation can be easily altered with new nation and race placements or even new map generation data.  
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_3.png)
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_4.png)
