@@ -27,7 +27,7 @@ static bool g_NationsGenerated = false;
 static int g_NeighborOffset = 2;
 static int g_NeighborStandardDistance = 10 * perlin_xy_scalar * 0.07; // Consider effects of scaling the map with perlin noise.
 static bool g_ShowNeighbors = true;
-static int g_NationSimulationSteps = 100;
+static int g_NationSimulationSteps = 30;
 
 PerlinNoise* g_Noise = nullptr;
 
@@ -290,7 +290,7 @@ std::vector<std::vector<Nation*>> g_NationsMap; // Nations storage with direct p
 std::vector<std::vector<std::string>> g_CultureDistribution; // Defines culture archetype at a given point x, y.
 std::vector<std::vector<Nation::Race>> g_RacialDistribution; // Defines racial archetype at a given point x, y.
 std::vector<std::string> g_NationLanguages;
-static const int g_NationCount = 250;
+static const int g_NationCount = 15;
 
 
 /*
@@ -1748,9 +1748,174 @@ public:
 			return BTNodeResult::FAILURE;
 		}
 	}
-
-
 };
+
+
+
+
+
+
+class TreeGenerator : public BTAction
+{
+public:
+	TreeGenerator(const std::string& name) : BTAction(name)
+	{
+	}
+
+
+	BTNodeResult command() override final
+	{
+		using namespace std;
+
+
+
+		std::vector<std::vector<Tree*>> new_forest_map;
+		new_forest_map.resize(g_VecSize);
+		for (auto& v : new_forest_map)
+		{
+			v.resize(g_VecSize);
+		}
+
+
+		// In the beginning, create a random forest distribution.
+		std::uniform_int_distribution<int> dis(0, 10);
+		for (int i = 0; i < g_TreeMap.size(); i++)
+		{
+			for (int j = 0; j < g_TreeMap[i].size(); j++)
+			{
+
+				std::string biometype = g_BiomeMap[i][j]->name;
+
+				if (biometype.compare("Mountain") == 0) continue;
+				else if (biometype.compare("Ocean") == 0) continue;
+				else if (biometype.compare("Sea") == 0) continue;
+				else if (biometype.compare("Sand") == 0) continue;
+
+
+				if (dis(g_Generator) % 2 == 0)
+				{
+					g_TreeMap[i][j] = new Tree(i, j, biometype);
+				}
+
+			}
+		}
+
+
+		// Then simulate evolution with defined steps.
+		for (int i = 2; i < g_TreeMap.size() - 2; i++)
+		{
+			for (int j = 2; j < g_TreeMap[i].size() - 2; j++)
+			{
+				Tree* tree = g_TreeMap[i][j];
+				std::string biometype = g_BiomeMap[i][j]->name;
+
+
+				if (biometype.compare("Mountain") == 0) continue;
+				else if (biometype.compare("Ocean") == 0) continue;
+				else if (biometype.compare("Sea") == 0) continue;
+				else if (biometype.compare("Sand") == 0) continue;
+
+
+
+				int neighbors = _neighbors(i, j);
+
+
+				if (tree) // Tree is alive.
+				{
+					if (neighbors < 2) // Tree will die.
+					{
+						new_forest_map[i][j] = nullptr;
+					}
+					else if (neighbors >= 3 && neighbors <= 3) // Stay alive.
+					{
+						new_forest_map[i][j] = g_TreeMap[i][j];
+					}
+					else if (neighbors > 3) // Die.
+					{
+						new_forest_map[i][j] = nullptr;
+					}
+
+				} // Tree is dead.
+				else
+				{
+					if (neighbors == 3) // Tree will come alive.
+					{
+						new_forest_map[i][j] = new Tree(i, j, biometype);
+					}
+					else
+					{
+						// Nothing happens.
+					}
+
+
+				}
+
+
+
+
+			}
+		}
+
+
+		g_TreeMap = new_forest_map;
+
+
+
+		if (true)
+		{
+#ifdef _DEBUG_OUT
+			cout << color(colors::GREEN) << endl;
+			cout << "\"" << name() << "\"->command() = SUCCESS" << white << endl;
+#endif
+
+			return BTNodeResult::SUCCESS;
+		}
+		else
+		{
+#ifdef _DEBUG_OUT
+			cout << color(colors::RED) << endl;
+			cout << "\"" << name() << "\"->command() = FAILURE" << white << endl;
+#endif
+
+			return BTNodeResult::FAILURE;
+		}
+
+
+
+	}
+
+
+
+private:
+	int _neighbors(int x, int y)
+	{
+
+		// We have to check 8 neighbors.
+		int neighbors = 0;
+
+
+		if (g_TreeMap[x - 1][y - 1] != 0) neighbors++;
+
+		if (g_TreeMap[x][y - 1] != 0) neighbors++;
+
+		if (g_TreeMap[x + 1][y - 1] != 0) neighbors++;
+
+		if (g_TreeMap[x - 1][y] != 0) neighbors++;
+
+		if (g_TreeMap[x + 1][y] != 0) neighbors++;
+
+		if (g_TreeMap[x - 1][y + 1] != 0) neighbors++;
+
+		if (g_TreeMap[x][y + 1] != 0) neighbors++;
+
+		if (g_TreeMap[x + 1][y + 1] != 0) neighbors++;
+
+
+		return neighbors;
+	}
+};
+
+
 
 
 #include <fstream>
@@ -2046,14 +2211,17 @@ public:
 		TierTwoNationGenerator* twogen = new TierTwoNationGenerator("Nation Placement Generator");
 		TierThreeNationGenerator* threegen = new TierThreeNationGenerator("Nation Neighbor Counter");
 		TierFourNationGenerator* fourgen = new TierFourNationGenerator("Nation Historical Events Generator");
+		TreeGenerator* treegen = new TreeGenerator("Tree Generator");
 
 		seq->addChild(timer);
 		seq->addChild(langgen);
+		seq->addChild(treegen);
 		seq->addChild(zerogen);
 		seq->addChild(onegen);
 		seq->addChild(twogen);
 		seq->addChild(threegen);
 		seq->addChild(fourgen);
+
 
 
 		tree->setRoot(seq);
@@ -2128,81 +2296,6 @@ public:
 
 		if (GetKey(olc::Key::ENTER).bPressed)
 		{
-
-			std::vector<std::vector<Tree*>> new_forest_map;
-			new_forest_map.resize(g_VecSize);
-			for (auto& v : new_forest_map)
-			{
-				v.resize(g_VecSize);
-			}
-		
-
-			for (int i = 1; i < g_VecSize - 1; i++)
-			{
-				for (int j = 1; j < g_VecSize - 1; j++)
-				{
-
-					double d = g_BiomeMap[i][j]->height;
-					double m = g_BiomeMap[i][j]->moisture;
-
-
-					// Draw created map with added trees.
-					if (d < 0.2) // Ocean
-					{
-					}
-					else if (d >= 0.2 && d < 0.25) // Sea
-					{
-					}
-					else if (d >= 0.25 && d < 0.3) // Sand
-					{
-					}
-					else if (d >= 0.3 && d < 0.4) // Savannah
-					{
-						if (m < 0.5)
-						{
-							if (rand() % 20 == 0)
-							{
-								new_forest_map[i][j] = new Tree(i, j, "Tundra");
-							}
-
-						}
-						else if (m >= 0.5)
-						{
-							if (rand() % 30 == 0)
-							{
-								new_forest_map[i][j] = new Tree(i, j, "Savannah");
-							}
-
-						}
-					}
-					else if (d >= 0.4 && d < 0.9) // Land / Jungle
-					{
-						if (m >= 0.3)
-						{
-							if (rand() % 4 == 0)
-							{
-								new_forest_map[i][j] = new Tree(i, j, "Jungle");
-							}
-
-						}
-						else if (m < 0.3)
-						{
-							if (rand() % 8 == 0)
-							{
-								new_forest_map[i][j] = new Tree(i, j, "Temperate");
-							}
-
-						}
-					}
-					else // Mountains
-					{
-					}
-
-				}
-
-			}
-
-			g_TreeMap = new_forest_map;
 		}
 
 
