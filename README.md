@@ -52,5 +52,7 @@ Note: The solution is not meant to show optimized code and serves only as a test
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_4.png)
 
 ## Forest/Tree Generation:  
-### Generating Trees with customized rules of "Game of Life".
+### Generating Forests with customized rules of "Game of Life" to ensure in Jungle and Tundra will be slightly more Forests,  
+### whereas in Savannah somewhat less.  
+![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_6.png)
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_5.png)
