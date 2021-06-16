@@ -2236,7 +2236,7 @@ public:
 		TierTwoNationGenerator* twogen = new TierTwoNationGenerator("Nation Placement Generator");
 		TierThreeNationGenerator* threegen = new TierThreeNationGenerator("Nation Neighbor Counter");
 		TierFourNationGenerator* fourgen = new TierFourNationGenerator("Nation Historical Events Generator");
-		TreeGenerator* treegen = new TreeGenerator("Tree Generator", 5);
+		TreeGenerator* treegen = new TreeGenerator("Tree Generator", 25);
 
 		seq->addChild(timer);
 		seq->addChild(langgen);
