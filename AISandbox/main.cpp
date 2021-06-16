@@ -1758,7 +1758,7 @@ public:
 class TreeGenerator : public BTAction
 {
 public:
-	TreeGenerator(const std::string& name) : BTAction(name)
+	TreeGenerator(const std::string& name, unsigned simulation_steps) : BTAction(name), m_SimulationSteps(simulation_steps)
 	{
 	}
 
@@ -1802,58 +1802,80 @@ public:
 
 
 		// Then simulate evolution with defined steps.
-		for (int i = 2; i < g_TreeMap.size() - 2; i++)
+		for (int step = 0; step < m_SimulationSteps; step++)
 		{
-			for (int j = 2; j < g_TreeMap[i].size() - 2; j++)
+
+
+			for (int i = 2; i < g_TreeMap.size() - 2; i++)
 			{
-				Tree* tree = g_TreeMap[i][j];
-				std::string biometype = g_BiomeMap[i][j]->name;
-
-
-				if (biometype.compare("Mountain") == 0) continue;
-				else if (biometype.compare("Ocean") == 0) continue;
-				else if (biometype.compare("Sea") == 0) continue;
-				else if (biometype.compare("Sand") == 0) continue;
-
-
-
-				int neighbors = _neighbors(i, j);
-
-
-				if (tree) // Tree is alive.
+				for (int j = 2; j < g_TreeMap[i].size() - 2; j++)
 				{
-					if (neighbors < 2) // Tree will die.
-					{
-						new_forest_map[i][j] = nullptr;
-					}
-					else if (neighbors >= 3 && neighbors <= 3) // Stay alive.
-					{
-						new_forest_map[i][j] = g_TreeMap[i][j];
-					}
-					else if (neighbors > 3) // Die.
-					{
-						new_forest_map[i][j] = nullptr;
-					}
+					Tree* tree = g_TreeMap[i][j];
+					std::string biometype = g_BiomeMap[i][j]->name;
 
-				} // Tree is dead.
-				else
-				{
-					if (neighbors == 3) // Tree will come alive.
+
+					if (biometype.compare("Mountain") == 0) continue;
+					else if (biometype.compare("Ocean") == 0) continue;
+					else if (biometype.compare("Sea") == 0) continue;
+					else if (biometype.compare("Sand") == 0) continue;
+
+
+
+					int neighbors = _neighbors(i, j);
+
+					// Apply conways game of life rules..
+					if (tree) // Tree is alive.
 					{
-						new_forest_map[i][j] = new Tree(i, j, biometype);
-					}
+						if (neighbors < 2) // Tree will die.
+						{
+							new_forest_map[i][j] = nullptr;
+						}
+						else if (neighbors >= 3 && neighbors <= 3) // Stay alive.
+						{
+							new_forest_map[i][j] = g_TreeMap[i][j];
+						}
+						else if (neighbors > 3) // Die.
+						{
+							new_forest_map[i][j] = nullptr;
+						}
+						// Add custom rules for our purpose...
+						else if (biometype.compare("Jungle") == 0 && dis(g_Generator) > 2) // High probability to stay alive if jungle tree.
+						{
+							new_forest_map[i][j] = g_TreeMap[i][j];
+						}
+						else if (biometype.compare("Tundra") == 0 && dis(g_Generator) > 4) // Semi High probability to stay alive if trundra tree.
+						{
+							new_forest_map[i][j] = g_TreeMap[i][j];
+						}
+						else if (biometype.compare("Savannah") == 0 && dis(g_Generator) < 2) // Small probability to die if savannah tree.
+						{
+							new_forest_map[i][j] = nullptr;
+						}
+
+
+					} // Tree is dead.
 					else
 					{
-						// Nothing happens.
+						if (neighbors == 3) // Tree will come alive.
+						{
+							new_forest_map[i][j] = new Tree(i, j, biometype);
+						}
+						else
+						{
+							// Nothing happens.
+						}
+
+
 					}
+
+
 
 
 				}
-
-
-
-
 			}
+
+
+
 		}
 
 
@@ -1884,6 +1906,9 @@ public:
 
 	}
 
+
+private:
+	unsigned m_SimulationSteps = 0;
 
 
 private:
@@ -2211,7 +2236,7 @@ public:
 		TierTwoNationGenerator* twogen = new TierTwoNationGenerator("Nation Placement Generator");
 		TierThreeNationGenerator* threegen = new TierThreeNationGenerator("Nation Neighbor Counter");
 		TierFourNationGenerator* fourgen = new TierFourNationGenerator("Nation Historical Events Generator");
-		TreeGenerator* treegen = new TreeGenerator("Tree Generator");
+		TreeGenerator* treegen = new TreeGenerator("Tree Generator", 5);
 
 		seq->addChild(timer);
 		seq->addChild(langgen);
