@@ -50,3 +50,7 @@ Note: The solution is not meant to show optimized code and serves only as a test
 #### can choose a nation to play as. The simulation can be easily altered with new nation and race placements or even new map generation data.  
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_3.png)
 ![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_4.png)
+
+## Forest/Tree Generation:  
+### Generating Trees with customized rules of "Game of Life".
+![alt text](https://github.com/CyberPlaton/AI/blob/master/WorldGeneration_5.png)
