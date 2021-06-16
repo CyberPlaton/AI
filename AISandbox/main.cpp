@@ -2460,51 +2460,78 @@ public:
 
 				}
 				*/
-				if (d < 0.2) // Ocean
-				{					
-					g_BiomeMap[i][j] = new Biome("Ocean", d, m);
-				}
-				else if (d >= 0.2 && d < 0.25) // Sea
-				{
-					g_BiomeMap[i][j] = new Biome("Sea", d, m);
-
-				}
-				else if (d >= 0.25 && d < 0.3) // Sand
-				{
-					g_BiomeMap[i][j] = new Biome("Sand", d, m);
-				}
-				else if (d >= 0.3 && d < 0.4) // Savannah
-				{
-					if (m < 0.5)
+					if (d < 0.2) // Ocean
 					{
-						g_BiomeMap[i][j] = new Biome("Tundra", d, m);
+						g_BiomeMap[i][j] = new Biome("Ocean", d, m);
+					}
+					else if (d >= 0.2 && d < 0.25) // Sea
+					{
+						g_BiomeMap[i][j] = new Biome("Sea", d, m);
 
 					}
-					else if (m >= 0.5)
+					else if (d >= 0.25 && d < 0.4) // Sand
 					{
-						g_BiomeMap[i][j] = new Biome("Savannah", d, m);
-
+						g_BiomeMap[i][j] = new Biome("Sand", d, m);
 					}
-				}
-				else if (d >= 0.4 && d < 0.9) // Land / Jungle
+					else if (d >= 0.4 && d < 0.9)
+					{
+						if (m < 0.2)
+						{
+							g_BiomeMap[i][j] = new Biome("Savannah", d, m);
+						}
+						else if (m < 0.4)
+						{
+							g_BiomeMap[i][j] = new Biome("Temperate", d, m);
+						}
+						else if (m >= 0.4 && m < 0.7)
+						{
+							g_BiomeMap[i][j] = new Biome("Tundra", d, m);
+						}
+						else if (m >= 0.7)
+						{
+							g_BiomeMap[i][j] = new Biome("Jungle", d, m);
+						}
+					}
+					else // Mountains
+					{
+						g_BiomeMap[i][j] = new Biome("Mountain", d, m);
+					}
+				
+
+				if (g_BiomeMap[i][j]->name.compare("Ocean") == 0)
 				{
-					if (m >= 0.3)
-					{
-						g_BiomeMap[i][j] = new Biome("Jungle", d, m);
-
-					}
-					else if (m < 0.3)
-					{
-						g_BiomeMap[i][j] = new Biome("Temperate", d, m);
-
-					}
+					Draw(i, j, olc::Pixel(0, 0, 139));
 				}
-				else // Mountains
+				else if (g_BiomeMap[i][j]->name.compare("Sea") == 0)
 				{
-					g_BiomeMap[i][j] = new Biome("Mountain", d, m);
+					Draw(i, j, olc::Pixel(0, 178, 238));
+				}
+				else if (g_BiomeMap[i][j]->name.compare("Tundra") == 0)
+				{
+					Draw(i, j, olc::Pixel(0, 100, 0));
+				}
+				else if (g_BiomeMap[i][j]->name.compare("Jungle") == 0)
+				{
+					Draw(i, j, olc::Pixel(75, 0, 130));
+				}
+				else if (g_BiomeMap[i][j]->name.compare("Sand") == 0)
+				{
+					Draw(i, j, olc::Pixel(245, 222, 179));
+				}
+				else if (g_BiomeMap[i][j]->name.compare("Temperate") == 0)
+				{
+					Draw(i, j, olc::Pixel(34, 139, 34));
+				}
+				else if (g_BiomeMap[i][j]->name.compare("Mountain") == 0)
+				{
+					Draw(i, j, olc::Pixel(139, 69, 19));
+				}
+				else if (g_BiomeMap[i][j]->name.compare("Savannah") == 0)
+				{
+					Draw(i, j, olc::Pixel(244, 164, 96));
 				}
 
-
+				/*
 				// Draw final map with trees.
 				if (d < 0.2) // Ocean
 				{
@@ -2696,6 +2723,8 @@ public:
 						}
 					}
 				}
+				*/
+
 
 				/*
 				// Draw created map with added trees.
